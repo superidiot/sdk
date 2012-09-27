@@ -13,8 +13,7 @@ void reader(FILE *fp){
   int i,j,c;
   for (i = 0; i < 9; i++){
     for (j = 0; j < 9; j++){
-      fscanf(fp, "%1d", &c);
-      sudoku.a[i][j].n = c;
+      fscanf(fp, "%1d", &(sudoku.a[i][j].n));
     }
   }
 }
