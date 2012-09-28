@@ -9,3 +9,4 @@ struct s {
 
 void reader(FILE *fd);
 void printer ();
+void solver ();
