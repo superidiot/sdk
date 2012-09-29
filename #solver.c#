@@ -37,9 +37,7 @@ static int contains(int *ns, int n){
   return 1;
 }
 
-static void square_dispatcher(int i, int j, struct s *sp){
-  
-}
+
 
 static rem_n_at(int i, int j, struct s *sp){
   int k;
