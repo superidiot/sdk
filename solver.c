@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "sudoku.h"
 
-void solver(){
+void solver(struct s *sp){
 }
 
 static uniqs(){
