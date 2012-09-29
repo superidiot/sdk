@@ -24,7 +24,10 @@ void printer (struct s *sp){
       int tmp;
       for (k = 0; k < 10; k++){
 	tmp = sp->a[i][j].ns[k];
-	printf("%1d", tmp);
+	if (tmp == 0)
+	  printf("%s", "_");
+	else
+	  printf("%1d",tmp);
       }
       printf("%s"," ");
     }
