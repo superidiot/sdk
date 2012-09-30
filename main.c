@@ -7,6 +7,7 @@ main (){
   FILE *fp = fopen("sudoku.txt","r");
   reader(fp,sp);
   fclose(fp);
+  printer(sp);
   solver(sp);
   printer(sp);
 }
