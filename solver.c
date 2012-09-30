@@ -114,6 +114,10 @@ static set_singles(struct s *sp){
   }
 }
 
+void uniqs(){
+  
+}
+
 void solver(struct s *sp){
   init_support(sp);
   do {

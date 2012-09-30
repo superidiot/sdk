@@ -4,7 +4,7 @@
 main (){
   struct s *sp = &sudoku;
  
-  FILE *fp = fopen("sudoku.txt","r");
+  FILE *fp = fopen("sudoku2.txt","r");
   reader(fp,sp);
   fclose(fp);
   printer(sp);
