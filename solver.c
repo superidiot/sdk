@@ -61,10 +61,11 @@ static void rem_n_square(int i, int j, struct s *sp){
   }
 }
 
+/*removes the number at (i,j) from row, column and square*/
 static rem_n_at(int i, int j, struct s *sp){
   int k;
   int tmp = sp->a[i][j].n;
-  /*  printf("removing %d at (%d,%d)\n",tmp,i,j);*/
+  /*printf("removing %d at (%d,%d)\n",tmp,i,j);*/
   for (k = 0; k < 9; k++){
     if ((sp->a[i][k].ns[tmp] > 0) && (sp->a[i][k].ns[0] > 0)){
       sp->a[i][k].ns[tmp] = 0;
@@ -114,8 +115,30 @@ static set_singles(struct s *sp){
   }
 }
 
-void uniqs(){
-  
+void uniqs(struct s *sp){
+  int i,j,k,l,c,tmp;
+  /* first only look at columns */
+  for (j = 0; j < 9; j++){
+    for (k = 1; k < 10; k++){
+      c = 0;
+      for (i = 0; i < 9; i++){
+	if ((sp->a[i][j].n == 0) && (sp->a[i][j].ns[k] == k)){
+	  c++;
+	}
+      }
+      if (c == 1){
+	for (i = 0; i < 9; i++){
+	  if (sp->a[i][j].ns[k] == k){
+	    sp->a[i][j].n = k;
+	    for (l = 0; l < 10; l++){
+	      sp->a[i][j].ns[l] = 0;
+	    }
+	    rem_n_at(i,j,sp);
+	  }
+	}
+      }
+    }
+  }
 }
 
 void solver(struct s *sp){
@@ -124,6 +147,7 @@ void solver(struct s *sp){
     changes = 0;
     rem_n_from_frees(sp);
     set_singles(sp);
+    uniqs(sp);
   }
   while (changes);
 }
