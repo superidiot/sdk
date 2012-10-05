@@ -7,7 +7,9 @@ main (){
   FILE *fp = fopen("sudoku2.txt","r");
   reader(fp,sp);
   fclose(fp);
-  printer(sp);
+  printer_cli(sp);
+  printer_ps(sp, "in_sudoku.ps");
   solver(sp);
-  printer(sp);
+  printer_cli(sp);
+  printer_ps(sp, "out_sudoku.ps");
 }

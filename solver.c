@@ -116,7 +116,7 @@ static set_singles(struct s *sp){
 }
 
 void uniqs(struct s *sp){
-  int i,j,k,l,c,tmp;
+  int i,j,k,l,c;
   /* first only look at columns */
   for (j = 0; j < 9; j++){
     for (k = 1; k < 10; k++){
@@ -128,6 +128,28 @@ void uniqs(struct s *sp){
       }
       if (c == 1){
 	for (i = 0; i < 9; i++){
+	  if (sp->a[i][j].ns[k] == k){
+	    sp->a[i][j].n = k;
+	    for (l = 0; l < 10; l++){
+	      sp->a[i][j].ns[l] = 0;
+	    }
+	    rem_n_at(i,j,sp);
+	  }
+	}
+      }
+    }
+  }
+  /* then look at rows*/
+  for (i = 0; i < 9; i++){
+    for (k = 1; k < 10; k++){
+      c = 0;
+      for (j = 0; j < 9; j++){
+	if ((sp->a[i][j].n == 0) && (sp->a[i][j].ns[k] == k)){
+	  c++;
+	}
+      }
+      if (c == 1){
+	for (j = 0; j < 9; j++){
 	  if (sp->a[i][j].ns[k] == k){
 	    sp->a[i][j].n = k;
 	    for (l = 0; l < 10; l++){
