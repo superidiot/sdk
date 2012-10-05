@@ -8,5 +8,6 @@ struct s {
 } sudoku;
 
 void reader(FILE *fd, struct s *sp);
-void printer (struct s *sp);
+void printer_cli (struct s *sp);
+void printer_ps (struct s *sp, const char *filename);
 void solver (struct s *sp);
