@@ -57,31 +57,31 @@ void printer_ps (struct s *sp, const char *filename, int offsetX, int offsetY, c
 	    if (sp->a[i][j].ns[k] != 0){
 	      fprintf(psfile, "%d  ", k);
 	    } else {
-	      fprintf(psfile, "%s", "   ");
+	      fprintf(psfile, "%s", "    ");
 	    }
 	  } else if ( k == 3 ){
 	    if (sp->a[i][j].ns[k] != 0){
 	      fprintf(psfile, "%d) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show offset moveto %d cm %d cm rmoveto 0 13 rmoveto (", k, j, (8 - i));
 	    } else {
-	      fprintf(psfile, " ) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show offset moveto %d cm %d cm rmoveto 0 13 rmoveto (", j, (8 - i));
+	      fprintf(psfile, "  ) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show offset moveto %d cm %d cm rmoveto 0 13 rmoveto (", j, (8 - i));
 	    }
 	  } else if ( (k >= 2) && (k < 6) ){
 	    if (sp->a[i][j].ns[k] != 0){
 	      fprintf(psfile, "%d  ", k);
 	    } else {
-	      fprintf(psfile, "%s", "   ");
+	      fprintf(psfile, "%s", "    ");
 	    }
 	  } else if ( k == 6 ){
 	    if (sp->a[i][j].ns[k] != 0){
 	      fprintf(psfile, "%d) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show offset moveto %d cm %d cm 6 add rmoveto (", k, j, (8 - i));
 	    } else {
-	      fprintf(psfile, " ) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show offset moveto %d cm %d cm 6 add rmoveto (", j, (8 - i));
+	      fprintf(psfile, "  ) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show offset moveto %d cm %d cm 6 add rmoveto (", j, (8 - i));
 	    }
 	  } else if ( (k >= 5) && (k < 9) ){
 	    if (sp->a[i][j].ns[k] != 0){
 	      fprintf(psfile, "%d  ", k);
 	    } else {
-	      fprintf(psfile, "%s", "   ");
+	      fprintf(psfile, "%s", "    ");
 	    }
 	  } else if ( k == 9 ){
 	    if (sp->a[i][j].ns[k] != 0){
