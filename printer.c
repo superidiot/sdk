@@ -2,6 +2,20 @@
 
 #include "sudoku.h"
 
+void print_bin(short ns){
+  short bin = 1;
+  while (bin < ns){
+    bin *= 2;
+  }
+  bin /= 2;
+  
+  while (bin > 0){
+    printf("%d", bin < ns ?  1 : 0);
+    bin /= 2;
+  }
+  printf("%s", "\n");
+}
+
 void printer_cli (struct s *sp){
   int i,j;
   for (i = 0; i < 9; i++){
@@ -12,8 +26,8 @@ void printer_cli (struct s *sp){
       if (j % 3 == 0){
 	printf("%s","|");
       }
-      if (sp->a[i][j].n != 0){
-	printf("%1d", sp->a[i][j].n);
+      if (sp->sudoku_array[i][j].n != 0){
+	printf("%1d", sp->sudoku_array[i][j].n);
       }
       else {
 	printf("%s", "_");
@@ -28,7 +42,7 @@ void printer_cli (struct s *sp){
       int k;
       int tmp;
       for (k = 0; k < 10; k++){
-	tmp = sp->a[i][j].ns[k];
+	tmp = sp->sudoku_array[i][j].ns;
 	if (tmp == 0)
 	  printf("%s", "_");
 	else
@@ -39,7 +53,7 @@ void printer_cli (struct s *sp){
     printf("%s","\n");
   }
 }
-
+/*
 void printer_ps (struct s *sp, const char *filename, int offsetX, int offsetY, const char *mode){
   int i,j,k;
   FILE *psfile = fopen(filename, mode);
@@ -48,51 +62,51 @@ void printer_ps (struct s *sp, const char *filename, int offsetX, int offsetY, c
   fprintf(psfile, "%s", "/Helvetica-Bold findfont fontGr scalefont setfont\noffset moveto\n");
   for (j = 8; j >= 0; j--){
     for (i = 0; i < 9; i++){
-      if (sp->a[i][j].n != 0){
-	fprintf(psfile, "offset moveto %d cm %d cm rmoveto (%d) showNumber\n", j, (8 - i), sp->a[i][j].n);
+      if (sp->sudoku_array[i][j].n != 0){
+	fprintf(psfile, "offset moveto %d cm %d cm rmoveto (%d) showNumber\n", j, (8 - i), sp->sudoku_array[i][j].n);
       } else {
 	fprintf(psfile, "gsave /Helvetica findfont 5 scalefont setfont offset moveto %d cm %d cm rmoveto 0 20 rmoveto (", j, (8 - i));
 	for (k = 1; k < 10; k++){
 	  if ( k < 3 ){
-	    if (sp->a[i][j].ns[k] != 0){
+	    if (sp->sudoku_array[i][j].ns[k] != 0){
 	      fprintf(psfile, "%d  ", k);
 	    } else {
 	      fprintf(psfile, "%s", "    ");
 	    }
 	  } else if ( k == 3 ){
-	    if (sp->a[i][j].ns[k] != 0){
+	    if (sp->sudoku_array[i][j].ns[k] != 0){
 	      fprintf(psfile, "%d) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show offset moveto %d cm %d cm rmoveto 0 13 rmoveto (", k, j, (8 - i));
 	    } else {
 	      fprintf(psfile, "  ) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show offset moveto %d cm %d cm rmoveto 0 13 rmoveto (", j, (8 - i));
 	    }
 	  } else if ( (k >= 2) && (k < 6) ){
-	    if (sp->a[i][j].ns[k] != 0){
+	    if (sp->sudoku_array[i][j].ns[k] != 0){
 	      fprintf(psfile, "%d  ", k);
 	    } else {
 	      fprintf(psfile, "%s", "    ");
 	    }
 	  } else if ( k == 6 ){
-	    if (sp->a[i][j].ns[k] != 0){
+	    if (sp->sudoku_array[i][j].ns[k] != 0){
 	      fprintf(psfile, "%d) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show offset moveto %d cm %d cm 6 add rmoveto (", k, j, (8 - i));
 	    } else {
 	      fprintf(psfile, "  ) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show offset moveto %d cm %d cm 6 add rmoveto (", j, (8 - i));
 	    }
 	  } else if ( (k >= 5) && (k < 9) ){
-	    if (sp->a[i][j].ns[k] != 0){
+	    if (sp->sudoku_array[i][j].ns[k] != 0){
 	      fprintf(psfile, "%d  ", k);
 	    } else {
 	      fprintf(psfile, "%s", "    ");
 	    }
 	  } else if ( k == 9 ){
-	    if (sp->a[i][j].ns[k] != 0){
+	    if (sp->sudoku_array[i][j].ns[k] != 0){
 	      fprintf(psfile, "%d) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show grestore\n", k);
 	    } else {
-	      fprintf(psfile, "%s", " ) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show grestore\n");
+	      fprintf(psfile, "%s", "  ) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show grestore\n");
 	    }
 	  }
 	}
       }
     }
-  }
-  fclose(psfile);
-}
+    } 
+    fclose(psfile);
+    }*/
