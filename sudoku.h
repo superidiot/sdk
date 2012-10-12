@@ -4,7 +4,7 @@ struct f {
 };
 
 struct s {
-  struct f **sudoku_array;
+  struct f **sarray;
 };
 
 enum numbers { ONE = 1,
@@ -17,7 +17,7 @@ enum numbers { ONE = 1,
 	       EIGHT = 1 << 7,
 	       NINE = 1 << 8};
 
-struct s* reader(FILE *fd, struct s *sp);
+struct s* reader(FILE *fd);
  
 void printer_cli (struct s *sp);
 /*
