@@ -4,38 +4,45 @@
 
 /*extern enum numbers; { ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE };*/
 
-struct s* reader(FILE *fp, struct s *sp){
+struct s* reader(FILE *fp){
   int i,j;
-  struct f **sudo_init;
-  struct f *tmparray;
-  
-  for (i = 0; i < 9; i++){
-    for (j = 0; j < 9; j++){
+  struct s *sp;
+  struct f **tmparray;
+  printf("%s\n", "test");
+  /* for (i = 0; i < 9; i++){ */
+  /*   for (j = 0; j < 9; j++){ */
       /*int n,ns;
 	struct f tmpfield = {n, ns}; */
-      printf("Durchlauf: i = %d, j = %d\n",i,j);
-      tmparray = malloc(sizeof(struct f));
-      /*tmparray[j] = malloc(sizeof(struct f));*/
-    }
-    printf("Durchlauf aussen: i = %d\n", i);
-    sudo_init = &tmparray;
-    printf("%s", "sudo_init gesetzt\n");
-    if (i == 8) printf("%s", "letzter durchlauf");
-    /*    if (i < 8) sudo_init++;*/
-  }
+    /*   printf("Durchlauf: i = %d, j = %d\n",i,j); */
+    /*   tmparray = malloc(sizeof(struct f)); */
+    /*   /\*tmparray[j] = malloc(sizeof(struct f));*\/ */
+    /* } */
+    /* printf("Durchlauf aussen: i = %d\n", i); */
+    /* sudo_init = &tmparray; */
+    /* printf("%s", "sudo_init gesetzt\n"); */
+    /* if (i == 8) printf("%s", "letzter durchlauf"); */
+    /* /\*    if (i < 8) sudo_init++;*\/ */
+  /*   } */
+  /* } */
 
-  printf("%s", "zugriff auf sp\n");
-  struct s *test = malloc(sizeof(struct s));
-  test->sudoku_array = sudo_init;
-  printf("%s", "Vor der Schleife\n");
-  for (i = 0; i < 0; i++){
-    for (j = 0; j < 4; j++){
-      printf("innen drin: i = %d, j = %d\n", i, j);
-      fscanf(fp, "%1d", &(test->sudoku_array[i][j].n));
-      test->sudoku_array[i][j].ns = ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE;
+  /* printf("%s", "zugriff auf sp\n"); */
+  /* struct s *test = malloc(sizeof(struct s)); */
+  /* test->sudoku_array = sudo_init; */
+  /* printf("%s", "Vor der Schleife\n"); */
+  for (i = 0; i < 9; i++){
+    for (j = 0; j < 9; j++){
+      //*tmparray = (struct f *) malloc(sizeof(struct f));
+      // fscanf(fp, "%1d", &((*tmparray)->n));
+      //  (*tmparray)->ns = ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE;
+      tmparray++;
+      // tmparray[i][j] = field malloc(sizeof(struct f));
     }
+    //(*tmparray)++;
   }
-  return test;
+  
+  // sp->sarray = tmparray;
+  return sp;
+  /* return test; */
   /* struct s tmpsudoku = {&sudo_init[0]};
      sp = &tmpsudoku;*/
 

@@ -3,55 +3,55 @@
 #include "sudoku.h"
 
 void print_bin(short ns){
-  short bin = 1;
-  while (bin < ns){
-    bin *= 2;
-  }
-  bin /= 2;
+/*   short bin = 1; */
+/*   while (bin < ns){ */
+/*     bin *= 2; */
+/*   } */
+/*   bin /= 2; */
   
-  while (bin > 0){
-    printf("%d", bin < ns ?  1 : 0);
-    bin /= 2;
-  }
-  printf("%s", "\n");
-}
+/*   while (bin > 0){ */
+/*     printf("%d", bin < ns ?  1 : 0); */
+/*     bin /= 2; */
+/*   } */
+/*   printf("%s", "\n"); */
+/* } */
 
-void printer_cli (struct s *sp){
-  int i,j;
-  for (i = 0; i < 9; i++){
-    if (i % 3 == 0){
-      printf("%s","+-----------+\n");
-    }
-    for (j = 0; j < 9; j++){
-      if (j % 3 == 0){
-	printf("%s","|");
-      }
-      if (sp->sudoku_array[i][j].n != 0){
-	printf("%1d", sp->sudoku_array[i][j].n);
-      }
-      else {
-	printf("%s", "_");
-      }
-    }
-    printf("%1s","|\n");
-  }
-  printf("%s","+-----------+\n");
+/* void printer_cli (struct s *sp){ */
+/*   int i,j; */
+/*   for (i = 0; i < 9; i++){ */
+/*     if (i % 3 == 0){ */
+/*       printf("%s","+-----------+\n"); */
+/*     } */
+/*     for (j = 0; j < 9; j++){ */
+/*       if (j % 3 == 0){ */
+/* 	printf("%s","|"); */
+/*       } */
+/*       if (sp->sudoku_array[i][j].n != 0){ */
+/* 	printf("%1d", sp->sudoku_array[i][j].n); */
+/*       } */
+/*       else { */
+/* 	printf("%s", "_"); */
+/*       } */
+/*     } */
+/*     printf("%1s","|\n"); */
+/*   } */
+/*   printf("%s","+-----------+\n"); */
 
-  for (i = 0; i < 9; i++){
-    for (j = 0; j < 9; j++){
-      int k;
-      int tmp;
-      for (k = 0; k < 10; k++){
-	tmp = sp->sudoku_array[i][j].ns;
-	if (tmp == 0)
-	  printf("%s", "_");
-	else
-	  printf("%1d",tmp);
-      }
-      printf("%s"," ");
-    }
-    printf("%s","\n");
-  }
+/*   for (i = 0; i < 9; i++){ */
+/*     for (j = 0; j < 9; j++){ */
+/*       int k; */
+/*       int tmp; */
+/*       for (k = 0; k < 10; k++){ */
+/* 	tmp = sp->sudoku_array[i][j].ns; */
+/* 	if (tmp == 0) */
+/* 	  printf("%s", "_"); */
+/* 	else */
+/* 	  printf("%1d",tmp); */
+/*       } */
+/*       printf("%s"," "); */
+/*     } */
+/*     printf("%s","\n"); */
+/*   } */
 }
 /*
 void printer_ps (struct s *sp, const char *filename, int offsetX, int offsetY, const char *mode){
