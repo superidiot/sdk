@@ -4,7 +4,7 @@ struct f {
 };
 
 struct s {
-  struct f **sarray;
+  struct f* a[9][9];
 };
 
 enum numbers { ONE = 1,

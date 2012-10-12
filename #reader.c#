@@ -6,7 +6,7 @@
 
 struct s* reader(FILE *fp){
   int i,j;
-  struct s sp = { struct f *a[9][9] };
+  struct s *sp = { struct f *a[9][9] };
   printf("%s\n", "test");
   /* for (i = 0; i < 9; i++){ */
   /*   for (j = 0; j < 9; j++){ */
