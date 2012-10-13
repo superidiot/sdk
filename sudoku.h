@@ -7,6 +7,8 @@ struct s {
   struct f* a[9][9];
 };
 
+struct s sudoku;
+
 enum numbers { ONE = 1,
 	       TWO = 1 << 1,
 	       THREE = 1 << 2,
@@ -17,7 +19,7 @@ enum numbers { ONE = 1,
 	       EIGHT = 1 << 7,
 	       NINE = 1 << 8};
 
-struct s* reader(FILE *fd);
+struct s *reader(FILE *fd);
  
 void printer_cli (struct s *sp);
 /*
