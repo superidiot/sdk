@@ -1,6 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "sudoku.h"
 enum bool {false, true};
+enum bool changed;
+static struct f *tmp[9];
 
 static int popcount (int ns){
   int c = 0;
@@ -16,117 +19,109 @@ static int popcount (int ns){
   return c;
 }
 
-/* static init_support(struct s *sp){ */
-/*   int i,j; */
-/*   for (i = 0; i < 9; i++) { */
-/*     for (j = 0; j < 9; j++) { */
-/*       if (sp->sudoku_array[i][j].n == 0) */
-/* 	support(sp->sudoku_array[i][j].ns); */
-/*       else { */
-/* 	int k; */
-/* 	for (k = 0; k < 10; k++){ */
-/* 	  sp->sudoku_array[i][j].ns[k] = 0; */
-/* 	} */
-/*       } */
-/*     } */
-/*   } */
-/* } */
-
 /* returns true if ns contains n, else false */
 static enum bool contains(int ns, int n){
-  return ( (ns | (1 << n) == ns) ? true : false);
+  return ( (ns & (1 << (n - 1)) > 0) ? true : false);
+}
+
+// get pointer to field a[i][j]
+static struct f *get_fp(struct s *sp, int i, int j){
+  return &(sp->a[i][j]);
 }
 
 // k specifies the row
-static struct f *get_row(struct s *sp, int k){
-  return sp->a[k][0];
+static void load_row(struct s *sp, int k){
+  int i;
+  for (i = 0; i < 9; i++){
+    tmp[i] = &(sp->a[k][i]);
+  }
 }
 
 // k specifies the column
-static struct f *get_col(int k){
+static load_col(struct s *sp, int k){
+  int i;
+  for (i = 0; i < 9; i++){
+    tmp[i] = &(sp->a[i][k]);
+  }
 }
 
-// k specifies subsquare k
-static struct f *get_squ(int k){
+// k specifies subsquare k when traversing the sudoku in z-shape
+static load_squ(struct s *sp, int k){
+  int i,j,u,v,c;
+  c = 0;
+  i = 3 * (k / 3);
+  j = 3 * (k % 3);
+  for (u = 0; u < 3; u++){
+    for (v = 0; v < 3; v++){
+      tmp[c++] = &(sp->a[i + u][j + v]);
+    }
+  }
 }
 
-/* static void rem_n_square(int i, int j, struct s *sp){ */
-/*   int k,l,u,v,tmp; */
-/*   tmp = sp->sudoku_array[i][j].n; */
-/*   /\*  u = 3 * (i % 3); */
-/*       v = 3 * (j / 3);*\/ */
-/*   if (i < 3) u = 0; */
-/*   else if ((i >= 3) && (i < 6)) u = 3; */
-/*   else if (i >= 6) u = 6; */
-/*   if (j < 3) v = 0; */
-/*   else if ((j >= 3) && (j < 6)) v = 3; */
-/*   else if (j >= 6) v = 6; */
-/*   /\*printf("removing %d at square (%d,%d)\n",tmp,u,v);*\/ */
-/*   for (k = 0; k < 3; k++){ */
-/*     for (l = 0; l < 3; l++){ */
-/*       if ((sp->sudoku_array[k+u][l+v].ns[tmp] > 0) && (sp->sudoku_array[k+u][l+v].ns[0] > 0)){ */
-/* 	sp->sudoku_array[k+u][l+v].ns[tmp] = 0; */
-/* 	sp->sudoku_array[k+u][l+v].ns[0]--; */
-/* 	changes = 1; */
-/*       } */
-/*     } */
-/*   } */
-/* } */
+// removes number n from current tmp
+static void rem_n_tmp(int n){
+  int i;
+  for (i = 0; i < 9; i++){
+    tmp[i]->ns &= ~(1 << (n-1));
+  }
+}
 
-/* /\*removes the number at (i,j) from row, column and square*\/ */
-/* static rem_n_at(int i, int j, struct s *sp){ */
-/*   int k; */
-/*   int tmp = sp->sudoku_array[i][j].n; */
-/*   /\*printf("removing %d at (%d,%d)\n",tmp,i,j);*\/ */
-/*   for (k = 0; k < 9; k++){ */
-/*     if ((sp->sudoku_array[i][k].ns[tmp] > 0) && (sp->sudoku_array[i][k].ns[0] > 0)){ */
-/*       sp->sudoku_array[i][k].ns[tmp] = 0; */
-/*       sp->sudoku_array[i][k].ns[0]--; */
-/*       changes = 1; */
-/*     } */
-/*     if ((sp->sudoku_array[k][j].ns[tmp] > 0) && (sp->sudoku_array[k][j].ns[0] > 0)){ */
-/*       sp->sudoku_array[k][j].ns[tmp] = 0; */
-/*       sp->sudoku_array[k][j].ns[0]--; */
-/*       changes = 1; */
-/*     } */
-/*   } */
-/*   rem_n_square(i,j,sp); */
-/* } */
+static int get_squ_number(int i, int j){
+  int ret;
+  if (i < 3 && j < 3) ret = 0;
+  else if (i < 3 && j < 6) ret = 1;
+  else if (i < 3) ret = 2;
+  else if (i < 6 && j < 3) ret = 3;
+  else if (i < 6 && j < 6) ret = 4;
+  else if (i < 6) ret = 5;
+  else if (j < 3) ret = 6;
+  else if (j < 6) ret = 7;
+  else ret = 8;
+  return ret;
+}
 
-/* static rem_n_from_frees(struct s *sp){ */
-/*   int i,j; */
-/*   for (i = 0; i < 9; i++){ */
-/*     for (j = 0; j < 9; j++){ */
-/*       if (sp->sudoku_array[i][j].n > 0) */
-/* 	rem_n_at(i,j,sp); */
-/*     } */
-/*   } */
-/* } */
+static void rem_n_at(struct s *sp, int i, int j){
+  if (sp->a[i][j].n != 0){
+    load_row(sp,i);
+    rem_n_tmp(sp->a[i][j].n);
+    load_col(sp,j);
+    rem_n_tmp(sp->a[i][j].n);
+    load_squ(sp, get_squ_number(i, j) );
+    rem_n_tmp(sp->a[i][j].n);
+  }
+}
 
-/* static set_single(int i, int j, struct s *sp){ */
-/*   int k,tmp; */
-/*   for (k = 1; k < 10; k++){ */
-/*     tmp = sp->sudoku_array[i][j].ns[k]; */
-/*     if (tmp != 0){ */
-/*       sp->sudoku_array[i][j].n = tmp; */
-/*       sp->sudoku_array[i][j].ns[0] = 0; */
-/*       sp->sudoku_array[i][j].ns[tmp] = 0; */
-/*       rem_n_at(i,j,sp); */
-/*       changes = 1; */
-/*     } */
-/*   } */
-/* } */
+static void init_ns(struct s *sp){
+  int i, j;
+  for (i = 0; i < 9; i++){
+    for (j = 0; j < 9; j++){
+      rem_n_at(sp, i, j);
+    }
+  }
+}
 
-/* static set_singles(struct s *sp){ */
-/*   int i,j; */
-/*   for (i = 0; i < 9; i++){ */
-/*     for (j = 0; j < 9; j++){ */
-/*       if (sp->sudoku_array[i][j].ns[0] == 1) */
-/* 	set_single(i,j,sp); */
-/*     } */
-/*   } */
-/* } */
+static void set_single(struct s *sp, int i, int j){
+  int k,tmp;
+  for (k = 0; k < 9; k++){
+    if ((1 << k) == sp->a[i][j].ns){
+      sp->a[i][j].ns = 0;
+      sp->a[i][j].n = k + 1;
+      rem_n_at(sp, i, j);
+      changed = true;
+    }
+  }
+}
 
+static void set_singles(struct s *sp){
+  int i,j;
+  for (i = 0; i < 9; i++){
+    for (j = 0; j < 9; j++){
+      if (popcount(sp->a[i][j].ns) == 1){
+	set_single(sp,i,j);
+      }
+    }
+  }
+}
 /* void uniqs(struct s *sp){ */
 /*   int i,j,k,l,c; */
 /*   /\* first only look at columns *\/ */
@@ -176,26 +171,11 @@ static struct f *get_squ(int k){
 /* } */
 
 void solver(struct s *sp){
-  int changed = true;
-  int i;
-  struct f *tmp;
-  //init_support(sp);
+  changed = true;
+  int i,j;
+  init_ns(sp);
   do {
     changed = false;
-    printf("%d", popcount(sp->a[0][1]->ns));
-    sp->a[0][1]->ns = sp->a[0][1]->ns ^ ONE;
-    printf("%d", popcount(sp->a[0][1]->ns));
-    printf("%d", contains(sp->a[0][0]->ns, 1));
-    printf("%d", contains(sp->a[0][0]->ns, 5));
-    printf("%d", contains(sp->a[0][1]->ns, 5));
-    printf("%d\n", contains(sp->a[0][1]->ns, 1));
-    tmp = get_row(sp, 0);
-    for (i = 0; i < 9; i++){
-      printf("%d", tmp[i].n);
-    }
-    // rem_n_from_frees(sp);
-    // set_singles(sp);
-    // uniqs(sp);
-  }
-  while (changed);
+    set_singles(sp);
+  } while (changed == true);
 }
