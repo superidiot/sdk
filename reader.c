@@ -7,16 +7,14 @@ struct s* reader(FILE *fp){
   extern struct s sudoku;
   for (i = 0; i < 9; i++){
     for (j = 0; j < 9; j++){
-      struct f *field = (struct f *) malloc (sizeof(struct f));
-      fscanf(fp, "%1d", &(field->n));
-      if (field->n == 0){
-	field->ns = ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE;
+      //struct f *field = (struct f *) malloc (sizeof(struct f));
+      fscanf(fp, "%1d", &(sudoku.a[i][j].n));
+      if (sudoku.a[i][j].n == 0){
+	sudoku.a[i][j].ns = ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE;
       }
       else {
-	field->ns = 0;
+	sudoku.a[i][j].ns = 0;
       }
-	
-      sudoku.a[i][j] = field;
     }
   }
   return &sudoku;

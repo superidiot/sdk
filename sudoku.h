@@ -4,7 +4,7 @@ struct f {
 };
 
 struct s {
-  struct f* a[9][9];
+  struct f a[9][9];
 };
 
 struct s sudoku;

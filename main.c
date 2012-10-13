@@ -13,6 +13,6 @@ main (){
   printer_cli(sp);
   printer_ps(sp, "sudoku.ps", 1, 11, "w");
   solver(sp);
-  // printer_cli(sp);
+  printer_cli(sp);
   /* printer_ps(sp, "sudoku.ps", 1, 1, "a"); */
 }
