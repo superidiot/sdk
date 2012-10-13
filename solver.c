@@ -5,6 +5,7 @@ enum bool {false, true};
 enum bool changed;
 static struct f *tmp[9];
 
+// determines the hamming-weight of ns
 static int popcount (int ns){
   int c = 0;
   if ((ns | ONE) == ns )  { ++c; }
@@ -58,7 +59,7 @@ static load_squ(struct s *sp, int k){
   }
 }
 
-// removes number n from current tmp
+// removes number n from current tmp-array
 static void rem_n_tmp(int n){
   int i;
   for (i = 0; i < 9; i++){
@@ -66,6 +67,7 @@ static void rem_n_tmp(int n){
   }
 }
 
+// determines subsquare-number k that contains index (i,j)
 static int get_squ_number(int i, int j){
   int ret;
   if (i < 3 && j < 3) ret = 0;
@@ -80,6 +82,7 @@ static int get_squ_number(int i, int j){
   return ret;
 }
 
+// removes n from ns at (i,j) in row, column, and subsquare
 static void rem_n_at(struct s *sp, int i, int j){
   if (sp->a[i][j].n != 0){
     load_row(sp,i);
@@ -91,6 +94,7 @@ static void rem_n_at(struct s *sp, int i, int j){
   }
 }
 
+// removes n from ns in row, column and subsquare for each entry
 static void init_ns(struct s *sp){
   int i, j;
   for (i = 0; i < 9; i++){
@@ -100,6 +104,7 @@ static void init_ns(struct s *sp){
   }
 }
 
+// sets n at (i,j). Should only be called when popcount(ns) == 1
 static void set_single(struct s *sp, int i, int j){
   int k,tmp;
   for (k = 0; k < 9; k++){
@@ -112,6 +117,7 @@ static void set_single(struct s *sp, int i, int j){
   }
 }
 
+// sets all fields that have popcount(ns) == 1
 static void set_singles(struct s *sp){
   int i,j;
   for (i = 0; i < 9; i++){
@@ -122,6 +128,17 @@ static void set_singles(struct s *sp){
     }
   }
 }
+
+static void uniqs(struct s *sp){
+  int i,j;
+  for (i = 0; i < 9; i++){
+    load_row(sp, i);
+    for (j = 0; j < 9; j++){
+      if (tmp[j]->ns);
+    }
+  }
+}
+
 /* void uniqs(struct s *sp){ */
 /*   int i,j,k,l,c; */
 /*   /\* first only look at columns *\/ */

@@ -11,7 +11,6 @@ static void print_bin(int ns){
     }
     else {
       printf("%d",0);
-      // ns &= (~bin);
       bin >>= 1;
     }
   }
@@ -47,7 +46,6 @@ void printer_cli (struct s *sp){
 	printf("%s", "_________");
       }
       else {
-	//printf("%d", tmp);
 	print_bin(tmp);
       }
       printf("%s"," ");
