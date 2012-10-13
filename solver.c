@@ -1,18 +1,18 @@
 #include <stdio.h>
 #include "sudoku.h"
-enum changes {false, true};
+enum bool {false, true};
 
 static int popcount (int ns){
   int c = 0;
-  if ((ns | ONE) == ns ){++c;}
-  if ((ns | TWO) == ns){++c;}
-  if ((ns | THREE) == ns){++c;}
-  if ((ns | FOUR) == ns){++c;}
-  if ((ns | FIVE) == ns){++c;}
-  if ((ns | SIX) == ns){++c;}
-  if ((ns | SEVEN) == ns){++c;}
-  if ((ns | EIGHT) == ns){++c;}
-  if ((ns | NINE) == ns){++c;}
+  if ((ns | ONE) == ns )  { ++c; }
+  if ((ns | TWO) == ns)   { ++c; }
+  if ((ns | THREE) == ns) { ++c; }
+  if ((ns | FOUR) == ns)  { ++c; }
+  if ((ns | FIVE) == ns)  { ++c; }
+  if ((ns | SIX) == ns)   { ++c; }
+  if ((ns | SEVEN) == ns) { ++c; }
+  if ((ns | EIGHT) == ns) { ++c; }
+  if ((ns | NINE) == ns)  { ++c; }
   return c;
 }
 
@@ -32,15 +32,23 @@ static int popcount (int ns){
 /*   } */
 /* } */
 
-/* /\* returns 0 if ns contains n, else 1 *\/ */
-/* static int contains(int *ns, int n){ */
-/*   int k; */
-/*   for (k = 0; k < 10; k++){ */
-/*     if (ns[k] == n) */
-/*       return 0; */
-/*   } */
-/*   return 1; */
-/* } */
+/* returns true if ns contains n, else false */
+static enum bool contains(int ns, int n){
+  return ( (ns | (1 << n) == ns) ? true : false);
+}
+
+// k specifies the row
+static struct f *get_row(struct s *sp, int k){
+  return sp->a[k][0];
+}
+
+// k specifies the column
+static struct f *get_col(int k){
+}
+
+// k specifies subsquare k
+static struct f *get_squ(int k){
+}
 
 /* static void rem_n_square(int i, int j, struct s *sp){ */
 /*   int k,l,u,v,tmp; */
@@ -169,12 +177,22 @@ static int popcount (int ns){
 
 void solver(struct s *sp){
   int changed = true;
+  int i;
+  struct f *tmp;
   //init_support(sp);
   do {
     changed = false;
     printf("%d", popcount(sp->a[0][1]->ns));
     sp->a[0][1]->ns = sp->a[0][1]->ns ^ ONE;
     printf("%d", popcount(sp->a[0][1]->ns));
+    printf("%d", contains(sp->a[0][0]->ns, 1));
+    printf("%d", contains(sp->a[0][0]->ns, 5));
+    printf("%d", contains(sp->a[0][1]->ns, 5));
+    printf("%d\n", contains(sp->a[0][1]->ns, 1));
+    tmp = get_row(sp, 0);
+    for (i = 0; i < 9; i++){
+      printf("%d", tmp[i].n);
+    }
     // rem_n_from_frees(sp);
     // set_singles(sp);
     // uniqs(sp);

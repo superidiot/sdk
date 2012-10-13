@@ -1,17 +1,20 @@
 #include <stdio.h>
-
 #include "sudoku.h"
 
 static void print_bin(int ns){
   int bin = 1;
-  while (bin < ns){
-    bin *= 2;
+  // set bin to max{ n | 2^n < ns}
+  while ((bin <<= 1) <= ns){
+    ;
   }
-  bin /= 2;
   
-  while (bin > 0){
-    printf("%d", bin < ns ?  1 : 0);
-    bin /= 2;
+  while (ns > 1){
+    if (ns & (~bin) != ns){
+      printf("%d", 1);
+      ns &= (~bin);
+      bin >>= 1;
+    }
+    else printf("%d",0);
   }
 }
 
@@ -46,8 +49,8 @@ void printer_cli (struct s *sp){
       }
       else {
 	print_bin(tmp);
-	printf("%s"," ");
       }
+      printf("%s"," ");
     }
     printf("%s","\n");
   }
