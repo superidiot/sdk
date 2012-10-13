@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include "sudoku.h"
 
-/*extern enum numbers; { ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE };*/
-
 struct s* reader(FILE *fp){
   int i,j;
   extern struct s sudoku;
