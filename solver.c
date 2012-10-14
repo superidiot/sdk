@@ -4,6 +4,7 @@
 enum bool {false = 0, true = 1};
 enum bool changed;
 static struct f *tmp[9];
+enum bool interactive = false;
 
 static struct desk {
   // fields contains points to row, column or subsquare
@@ -121,10 +122,17 @@ static void rem_n_at(struct s *sp, int i, int j){
 }
 
 static void set_n_at(struct s *sp, int i, int j, int n){
+  if (interactive){
+    printf("setting %d at (%d,%d)\n", n, i, j);
+    getchar();
+  }
   sp->a[i][j].n = n;
   sp->a[i][j].ns = 0;
   rem_n_at(sp, i, j);
   changed = true;
+  if (interactive){
+    printer_cli(sp);
+  }	
 }
 
 // removes n from ns in row, column and subsquare for each entry
@@ -145,10 +153,6 @@ static void set_single(struct s *sp, int i, int j){
   for (k = 0; k < 9; k++){
     if ((1 << k) == sp->a[i][j].ns){
       set_n_at(sp, i, j, (k + 1));
-      /* sp->a[i][j].ns = 0; */
-      /* sp->a[i][j].n = k + 1; */
-      /* rem_n_at(sp, i, j); */
-      /* changed = true; */
     }
   }
 }
@@ -170,30 +174,22 @@ static void set_uniq_tmp(struct s *sp, int n){
   int i;
   int x,y,u,v;
   for (i = 0; i < 9; i++){
-    // if ( (1 << (n - 1)) == (desktop.fields[i]->ns & (1 << (n - 1))) ){
     if ( contains(desktop.fields[i]->ns, n) ){
-      /* desktop.fields[i]->n = n; */
-      /* desktop.fields[i]->ns = 0; */
       switch (desktop.type){
       case 'r':
-	//rem_n_at(sp, desktop.index, i);
 	set_n_at(sp, desktop.index, i, n);
 	break;
       case 'c':
 	set_n_at(sp, i, desktop.index, n);
-	// rem_n_at(sp, i, desktop.index);
 	break;
       case 's':
 	  x = 3 * (desktop.index / 3);
 	  y = 3 * (desktop.index % 3);
-	  u = 3 * (i / 3);
-	  v = 3 * (i % 3);
+	  u = i / 3;
+	  v = i % 3;
 	  set_n_at(sp, x + u, y + v, n);
-	  // rem_n_at(sp, x + u, y + v);
 	break;
       }
-
-      // changed = true;
     }
   }
 }
@@ -204,7 +200,6 @@ static void find_uniq_tmp(struct s *sp){
   for (n = 0; n < 9; n++){
     c = 0;
     for (i = 0; i < 9; i++){
-      // if ((desktop.fields[i]->ns & (1 << n)) == (1 << n)){
       if ( contains(desktop.fields[i]->ns, (n + 1)) ){
 	c++;
       }
@@ -220,24 +215,23 @@ static void set_uniqs(struct s *sp){
   int k;
   for (k = 0; k < 9; k++){
     load_row(sp, k);
-    // printf("looking for uniq in row %d\n", k);
     find_uniq_tmp(sp);
     load_col(sp, k);
-    // printf("looking for uniq in column %d\n", k);
     find_uniq_tmp(sp);
     load_squ(sp, k);
-    // printf("looking for uniq in square %d\n", k);
     find_uniq_tmp(sp);
   }
 }
 
-void solver(struct s *sp){
+int solver(struct s *sp, int inter){
   changed = true;
+  interactive = inter;
   int i,j;
   init_ns(sp);
   do {
     changed = false;
     set_singles(sp);
-    // set_uniqs(sp);
+    set_uniqs(sp);
   } while (changed == true);
+  return -1;
 }
