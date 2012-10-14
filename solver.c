@@ -129,13 +129,46 @@ static void set_singles(struct s *sp){
   }
 }
 
-static void uniqs(struct s *sp){
-  int i,j;
+static void set_uniq_tmp(int n){
+  int i;
   for (i = 0; i < 9; i++){
-    load_row(sp, i);
-    for (j = 0; j < 9; j++){
-      if (tmp[j]->ns);
+    if ( (1 << (n - 1)) == (tmp[i]->ns & (1 << (n - 1))) ){
+      tmp[i]->n = n;
+      tmp[i]->ns = 0;
+      changed = true;
     }
+  }
+}
+
+static void find_uniq_tmp(){
+  int i,n,c;
+  for (n = 0; n < 9; n++){
+    c = 0;
+    for (i = 0; i < 9; i++){
+      //printf("checking %d\n", n);
+      if ((tmp[i]->ns & (1 << n)) == (1 << n)){
+	c++;
+      }
+    }
+    if (c == 1){
+      printf("found uniq %d!\n", (n + 1)); 
+      set_uniq_tmp(n + 1);
+    }
+  }
+}
+
+static void set_uniqs(struct s *sp){
+  int k;
+  for (k = 0; k < 9; k++){
+    load_row(sp, k);
+    printf("looking for uniq in row %d\n", k);
+    find_uniq_tmp( );
+    load_col(sp, k);
+    printf("looking for uniq in column %d\n", k);
+    find_uniq_tmp( );
+    load_squ(sp, k);
+    printf("looking for uniq in square %d\n", k);
+    find_uniq_tmp( );
   }
 }
 
@@ -194,5 +227,6 @@ void solver(struct s *sp){
   do {
     changed = false;
     set_singles(sp);
+    set_uniqs(sp);
   } while (changed == true);
 }
