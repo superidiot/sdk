@@ -10,4 +10,4 @@ solver.o : solver.c sudoku.h
 
 .PHONY : clean
 clean : 
-	rm sudoku $(objects)
+	rm sudoku sudoku.ps $(objects)

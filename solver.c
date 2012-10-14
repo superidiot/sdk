@@ -5,6 +5,15 @@ enum bool {false, true};
 enum bool changed;
 static struct f *tmp[9];
 
+static struct desk {
+  // fields contains points to row, column or subsquare
+  struct f *fields[9];
+  // index contains index of row, column or subsquare
+  int index;
+  // type contains 'r' for row, 'c' for column, 's' for subsquare
+  char type;
+} desktop;
+
 // determines the hamming-weight of ns
 static int popcount (int ns){
   int c = 0;
@@ -33,16 +42,20 @@ static struct f *get_fp(struct s *sp, int i, int j){
 // k specifies the row
 static void load_row(struct s *sp, int k){
   int i;
+  desktop.type = 'r';
+  desktop.index = k;
   for (i = 0; i < 9; i++){
-    tmp[i] = &(sp->a[k][i]);
+    desktop.fields[i] = &(sp->a[k][i]);
   }
 }
 
 // k specifies the column
 static load_col(struct s *sp, int k){
   int i;
+  desktop.type = 'c';
+  desktop.index = k;
   for (i = 0; i < 9; i++){
-    tmp[i] = &(sp->a[i][k]);
+    desktop.fields[i] = &(sp->a[i][k]);
   }
 }
 
@@ -52,9 +65,11 @@ static load_squ(struct s *sp, int k){
   c = 0;
   i = 3 * (k / 3);
   j = 3 * (k % 3);
+  desktop.type = 's';
+  desktop.index = k;
   for (u = 0; u < 3; u++){
     for (v = 0; v < 3; v++){
-      tmp[c++] = &(sp->a[i + u][j + v]);
+      desktop.fields[c++] = &(sp->a[i + u][j + v]);
     }
   }
 }
@@ -63,7 +78,7 @@ static load_squ(struct s *sp, int k){
 static void rem_n_tmp(int n){
   int i;
   for (i = 0; i < 9; i++){
-    tmp[i]->ns &= ~(1 << (n-1));
+    desktop.fields[i]->ns &= ~(1 << (n-1));
   }
 }
 
@@ -129,24 +144,26 @@ static void set_singles(struct s *sp){
   }
 }
 
+// if uniq n was found in tmp, set it
 static void set_uniq_tmp(int n){
   int i;
   for (i = 0; i < 9; i++){
-    if ( (1 << (n - 1)) == (tmp[i]->ns & (1 << (n - 1))) ){
-      tmp[i]->n = n;
-      tmp[i]->ns = 0;
+    if ( (1 << (n - 1)) == (desktop.fields[i]->ns & (1 << (n - 1))) ){
+      desktop.fields[i]->n = n;
+      desktop.fields[i]->ns = 0;
       changed = true;
     }
   }
 }
 
+// find a uniq in tmp, call the method to set it
 static void find_uniq_tmp(){
   int i,n,c;
   for (n = 0; n < 9; n++){
     c = 0;
     for (i = 0; i < 9; i++){
       //printf("checking %d\n", n);
-      if ((tmp[i]->ns & (1 << n)) == (1 << n)){
+      if ((desktop.fields[i]->ns & (1 << n)) == (1 << n)){
 	c++;
       }
     }
@@ -157,6 +174,7 @@ static void find_uniq_tmp(){
   }
 }
 
+// find uniqs in rows, columns and subsquares.  Also set them.
 static void set_uniqs(struct s *sp){
   int k;
   for (k = 0; k < 9; k++){
