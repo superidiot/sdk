@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "sudoku.h"
-enum bool {false, true};
+enum bool {false = 0, true = 1};
 enum bool changed;
 static struct f *tmp[9];
 
@@ -15,23 +15,20 @@ static struct desk {
 } desktop;
 
 // determines the hamming-weight of ns
-static int popcount (int ns){
-  int c = 0;
-  if ((ns | ONE) == ns )  { ++c; }
-  if ((ns | TWO) == ns)   { ++c; }
-  if ((ns | THREE) == ns) { ++c; }
-  if ((ns | FOUR) == ns)  { ++c; }
-  if ((ns | FIVE) == ns)  { ++c; }
-  if ((ns | SIX) == ns)   { ++c; }
-  if ((ns | SEVEN) == ns) { ++c; }
-  if ((ns | EIGHT) == ns) { ++c; }
-  if ((ns | NINE) == ns)  { ++c; }
+static int popcount(int ns){
+  int c,i;
+  c = 0;
+  for (i = 0; i < 9; i++){
+    if ( (ns & (1 << i)) == (1 << i) ){
+      c++;
+    }
+  }
   return c;
 }
 
 /* returns true if ns contains n, else false */
 static enum bool contains(int ns, int n){
-  return ( (ns & (1 << (n - 1)) > 0) ? true : false);
+  return ( (ns & (1 << (n - 1))) > 0 ? true : false);
 }
 
 // get pointer to field a[i][j]
@@ -78,12 +75,26 @@ static load_squ(struct s *sp, int k){
 static void rem_n_tmp(int n){
   int i;
   for (i = 0; i < 9; i++){
-    desktop.fields[i]->ns &= ~(1 << (n-1));
+    if ( contains(desktop.fields[i]->ns, n) ){
+      desktop.fields[i]->ns &= ~(1 << (n - 1));
+      changed = true;
+    }
   }
 }
 
 // determines subsquare-number k that contains index (i,j)
 static int get_squ_number(int i, int j){
+  /* this works to, but i find it harder to read */
+  /* int k, l, c; */
+  /* c = 0; */
+  /* for (k = 3; k < 10; k += 3){ */
+  /*   for (l = 3; l < 10; l += 3){ */
+  /*     if ( (i < k) && (j < l) ){ */
+  /* 	return c; */
+  /*     } */
+  /*     c++; */
+  /*   } */
+  /* } */
   int ret;
   if (i < 3 && j < 3) ret = 0;
   else if (i < 3 && j < 6) ret = 1;
@@ -99,14 +110,21 @@ static int get_squ_number(int i, int j){
 
 // removes n from ns at (i,j) in row, column, and subsquare
 static void rem_n_at(struct s *sp, int i, int j){
-  if (sp->a[i][j].n != 0){
+  // if (sp->a[i][j].n != 0){
     load_row(sp,i);
     rem_n_tmp(sp->a[i][j].n);
     load_col(sp,j);
     rem_n_tmp(sp->a[i][j].n);
     load_squ(sp, get_squ_number(i, j) );
     rem_n_tmp(sp->a[i][j].n);
-  }
+  // }
+}
+
+static void set_n_at(struct s *sp, int i, int j, int n){
+  sp->a[i][j].n = n;
+  sp->a[i][j].ns = 0;
+  rem_n_at(sp, i, j);
+  changed = true;
 }
 
 // removes n from ns in row, column and subsquare for each entry
@@ -114,7 +132,9 @@ static void init_ns(struct s *sp){
   int i, j;
   for (i = 0; i < 9; i++){
     for (j = 0; j < 9; j++){
-      rem_n_at(sp, i, j);
+      if (sp->a[i][j].n != 0){
+	rem_n_at(sp, i, j);
+      }
     }
   }
 }
@@ -124,10 +144,11 @@ static void set_single(struct s *sp, int i, int j){
   int k,tmp;
   for (k = 0; k < 9; k++){
     if ((1 << k) == sp->a[i][j].ns){
-      sp->a[i][j].ns = 0;
-      sp->a[i][j].n = k + 1;
-      rem_n_at(sp, i, j);
-      changed = true;
+      set_n_at(sp, i, j, (k + 1));
+      /* sp->a[i][j].ns = 0; */
+      /* sp->a[i][j].n = k + 1; */
+      /* rem_n_at(sp, i, j); */
+      /* changed = true; */
     }
   }
 }
@@ -149,26 +170,30 @@ static void set_uniq_tmp(struct s *sp, int n){
   int i;
   int x,y,u,v;
   for (i = 0; i < 9; i++){
-    if ( (1 << (n - 1)) == (desktop.fields[i]->ns & (1 << (n - 1))) ){
-      desktop.fields[i]->n = n;
-      desktop.fields[i]->ns = 0;
+    // if ( (1 << (n - 1)) == (desktop.fields[i]->ns & (1 << (n - 1))) ){
+    if ( contains(desktop.fields[i]->ns, n) ){
+      /* desktop.fields[i]->n = n; */
+      /* desktop.fields[i]->ns = 0; */
       switch (desktop.type){
       case 'r':
-	rem_n_at(sp, desktop.index, i);
+	//rem_n_at(sp, desktop.index, i);
+	set_n_at(sp, desktop.index, i, n);
 	break;
       case 'c':
-	rem_n_at(sp, i, desktop.index);
+	set_n_at(sp, i, desktop.index, n);
+	// rem_n_at(sp, i, desktop.index);
 	break;
       case 's':
 	  x = 3 * (desktop.index / 3);
 	  y = 3 * (desktop.index % 3);
 	  u = 3 * (i / 3);
 	  v = 3 * (i % 3);
-	  rem_n_at(sp, x + u, y + v);
+	  set_n_at(sp, x + u, y + v, n);
+	  // rem_n_at(sp, x + u, y + v);
 	break;
       }
 
-      changed = true;
+      // changed = true;
     }
   }
 }
@@ -179,13 +204,12 @@ static void find_uniq_tmp(struct s *sp){
   for (n = 0; n < 9; n++){
     c = 0;
     for (i = 0; i < 9; i++){
-      //printf("checking %d\n", n);
-      if ((desktop.fields[i]->ns & (1 << n)) == (1 << n)){
+      // if ((desktop.fields[i]->ns & (1 << n)) == (1 << n)){
+      if ( contains(desktop.fields[i]->ns, (n + 1)) ){
 	c++;
       }
     }
     if (c == 1){
-      printf("found uniq %d!\n", (n + 1)); 
       set_uniq_tmp(sp, n + 1);
     }
   }
@@ -196,64 +220,16 @@ static void set_uniqs(struct s *sp){
   int k;
   for (k = 0; k < 9; k++){
     load_row(sp, k);
-    printf("looking for uniq in row %d\n", k);
+    // printf("looking for uniq in row %d\n", k);
     find_uniq_tmp(sp);
     load_col(sp, k);
-    printf("looking for uniq in column %d\n", k);
+    // printf("looking for uniq in column %d\n", k);
     find_uniq_tmp(sp);
     load_squ(sp, k);
-    printf("looking for uniq in square %d\n", k);
+    // printf("looking for uniq in square %d\n", k);
     find_uniq_tmp(sp);
   }
 }
-
-/* void uniqs(struct s *sp){ */
-/*   int i,j,k,l,c; */
-/*   /\* first only look at columns *\/ */
-/*   for (j = 0; j < 9; j++){ */
-/*     for (k = 1; k < 10; k++){ */
-/*       c = 0; */
-/*       for (i = 0; i < 9; i++){ */
-/* 	if ((sp->sudoku_array[i][j].n == 0) && (sp->sudoku_array[i][j].ns[k] == k)){ */
-/* 	  c++; */
-/* 	} */
-/*       } */
-/*       if (c == 1){ */
-/* 	for (i = 0; i < 9; i++){ */
-/* 	  if (sp->sudoku_array[i][j].ns[k] == k){ */
-/* 	    sp->sudoku_array[i][j].n = k; */
-/* 	    for (l = 0; l < 10; l++){ */
-/* 	      sp->sudoku_array[i][j].ns[l] = 0; */
-/* 	    } */
-/* 	    rem_n_at(i,j,sp); */
-/* 	  } */
-/* 	} */
-/*       } */
-/*     } */
-/*   } */
-/*   /\* then look at rows*\/ */
-/*   for (i = 0; i < 9; i++){ */
-/*     for (k = 1; k < 10; k++){ */
-/*       c = 0; */
-/*       for (j = 0; j < 9; j++){ */
-/* 	if ((sp->sudoku_array[i][j].n == 0) && (sp->sudoku_array[i][j].ns[k] == k)){ */
-/* 	  c++; */
-/* 	} */
-/*       } */
-/*       if (c == 1){ */
-/* 	for (j = 0; j < 9; j++){ */
-/* 	  if (sp->sudoku_array[i][j].ns[k] == k){ */
-/* 	    sp->sudoku_array[i][j].n = k; */
-/* 	    for (l = 0; l < 10; l++){ */
-/* 	      sp->sudoku_array[i][j].ns[l] = 0; */
-/* 	    } */
-/* 	    rem_n_at(i,j,sp); */
-/* 	  } */
-/* 	} */
-/*       } */
-/*     } */
-/*   } */
-/* } */
 
 void solver(struct s *sp){
   changed = true;
@@ -262,6 +238,6 @@ void solver(struct s *sp){
   do {
     changed = false;
     set_singles(sp);
-    set_uniqs(sp);
+    // set_uniqs(sp);
   } while (changed == true);
 }
