@@ -85,17 +85,6 @@ static void rem_n_tmp(int n){
 
 // determines subsquare-number k that contains index (i,j)
 static int get_squ_number(int i, int j){
-  /* this works to, but i find it harder to read */
-  /* int k, l, c; */
-  /* c = 0; */
-  /* for (k = 3; k < 10; k += 3){ */
-  /*   for (l = 3; l < 10; l += 3){ */
-  /*     if ( (i < k) && (j < l) ){ */
-  /* 	return c; */
-  /*     } */
-  /*     c++; */
-  /*   } */
-  /* } */
   int ret;
   if (i < 3 && j < 3) ret = 0;
   else if (i < 3 && j < 6) ret = 1;
@@ -111,14 +100,12 @@ static int get_squ_number(int i, int j){
 
 // removes n from ns at (i,j) in row, column, and subsquare
 static void rem_n_at(struct s *sp, int i, int j){
-  // if (sp->a[i][j].n != 0){
-    load_row(sp,i);
-    rem_n_tmp(sp->a[i][j].n);
-    load_col(sp,j);
-    rem_n_tmp(sp->a[i][j].n);
-    load_squ(sp, get_squ_number(i, j) );
-    rem_n_tmp(sp->a[i][j].n);
-  // }
+  load_row(sp,i);
+  rem_n_tmp(sp->a[i][j].n);
+  load_col(sp,j);
+  rem_n_tmp(sp->a[i][j].n);
+  load_squ(sp, get_squ_number(i, j) );
+  rem_n_tmp(sp->a[i][j].n);
 }
 
 static void set_n_at(struct s *sp, int i, int j, int n){
@@ -177,9 +164,11 @@ static void set_uniq_tmp(struct s *sp, int n){
     if ( contains(desktop.fields[i]->ns, n) ){
       switch (desktop.type){
       case 'r':
+	//printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, desktop.index, i, desktop.type, desktop.index);
 	set_n_at(sp, desktop.index, i, n);
 	break;
       case 'c':
+	//printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, i, desktop.index, desktop.type, desktop.index);
 	set_n_at(sp, i, desktop.index, n);
 	break;
       case 's':
@@ -187,6 +176,7 @@ static void set_uniq_tmp(struct s *sp, int n){
 	  y = 3 * (desktop.index % 3);
 	  u = i / 3;
 	  v = i % 3;
+	  //printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, x + u, y + v,desktop.type, desktop.index);
 	  set_n_at(sp, x + u, y + v, n);
 	break;
       }
@@ -205,6 +195,7 @@ static void find_uniq_tmp(struct s *sp){
       }
     }
     if (c == 1){
+      //printf("found uniq %d\n", n + 1);
       set_uniq_tmp(sp, n + 1);
     }
   }
@@ -223,6 +214,22 @@ static void set_uniqs(struct s *sp){
   }
 }
 
+static int test(struct s *sp){
+  int i,j,p,s,ret,c;
+  for (i = 0; i < 9; i++){
+    s = 0;
+    p = 1;
+    for (j = 0; j < 9; j++){
+      s += sp->a[i][j].n;
+      p *= sp->a[i][j].n;
+    }
+    if (p == 362880 && s == 45){
+      c++;
+    }
+  }
+  return (c == 18 ? 0 : -1);
+}
+
 int solver(struct s *sp, int inter){
   changed = true;
   interactive = inter;
@@ -233,5 +240,5 @@ int solver(struct s *sp, int inter){
     set_singles(sp);
     set_uniqs(sp);
   } while (changed == true);
-  return -1;
+  return test(sp);
 }
