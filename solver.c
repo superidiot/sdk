@@ -145,19 +145,36 @@ static void set_singles(struct s *sp){
 }
 
 // if uniq n was found in tmp, set it
-static void set_uniq_tmp(int n){
+static void set_uniq_tmp(struct s *sp, int n){
   int i;
+  int x,y,u,v;
   for (i = 0; i < 9; i++){
     if ( (1 << (n - 1)) == (desktop.fields[i]->ns & (1 << (n - 1))) ){
       desktop.fields[i]->n = n;
       desktop.fields[i]->ns = 0;
+      switch (desktop.type){
+      case 'r':
+	rem_n_at(sp, desktop.index, i);
+	break;
+      case 'c':
+	rem_n_at(sp, i, desktop.index);
+	break;
+      case 's':
+	  x = 3 * (desktop.index / 3);
+	  y = 3 * (desktop.index % 3);
+	  u = 3 * (i / 3);
+	  v = 3 * (i % 3);
+	  rem_n_at(sp, x + u, y + v);
+	break;
+      }
+
       changed = true;
     }
   }
 }
 
 // find a uniq in tmp, call the method to set it
-static void find_uniq_tmp(){
+static void find_uniq_tmp(struct s *sp){
   int i,n,c;
   for (n = 0; n < 9; n++){
     c = 0;
@@ -169,7 +186,7 @@ static void find_uniq_tmp(){
     }
     if (c == 1){
       printf("found uniq %d!\n", (n + 1)); 
-      set_uniq_tmp(n + 1);
+      set_uniq_tmp(sp, n + 1);
     }
   }
 }
@@ -180,13 +197,13 @@ static void set_uniqs(struct s *sp){
   for (k = 0; k < 9; k++){
     load_row(sp, k);
     printf("looking for uniq in row %d\n", k);
-    find_uniq_tmp( );
+    find_uniq_tmp(sp);
     load_col(sp, k);
     printf("looking for uniq in column %d\n", k);
-    find_uniq_tmp( );
+    find_uniq_tmp(sp);
     load_squ(sp, k);
     printf("looking for uniq in square %d\n", k);
-    find_uniq_tmp( );
+    find_uniq_tmp(sp);
   }
 }
 
