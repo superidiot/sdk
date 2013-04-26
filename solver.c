@@ -7,15 +7,15 @@ enum bool interactive = false;
 
 static struct desk
 {
-  // fields contains points to row, column or subsquare
+  /* fields contains points to row, column or subsquare */
   struct f *fields[9];
-  // index contains index of row, column or subsquare
+  /* index contains index of row, column or subsquare */
   int index;
-  // type contains 'r' for row, 'c' for column, 's' for subsquare
+  /* type contains 'r' for row, 'c' for column, 's' for subsquare */
   char type;
 } desktop;
 
-// determines the hamming-weight of ns
+/* determines the hamming-weight of ns */
 static int popcount(int ns)
 {
   int c,i;
@@ -34,13 +34,13 @@ static enum bool contains(int ns, int n)
   return ( (ns & (1 << (n - 1))) > 0 ? true : false);
 }
 
-// get pointer to field a[i][j]
+/* get pointer to field a[i][j] */
 static struct f *get_fp(struct s *sp, int i, int j)
 {
   return &(sp->a[i][j]);
 }
 
-// k specifies the row
+/* k specifies the row */
 static void load_row(struct s *sp, int k)
 {
   int i;
@@ -52,7 +52,7 @@ static void load_row(struct s *sp, int k)
     }
 }
 
-// k specifies the column
+/* k specifies the column */
 static load_col(struct s *sp, int k)
 {
   int i;
@@ -64,7 +64,7 @@ static load_col(struct s *sp, int k)
     }
 }
 
-// k specifies subsquare k when traversing the sudoku in z-shape
+/* k specifies subsquare k when traversing the sudoku in z-shape */
 static load_squ(struct s *sp, int k)
 {
   int i,j,u,v,c;
@@ -82,7 +82,7 @@ static load_squ(struct s *sp, int k)
     }
 }
 
-// removes number n from current tmp-array
+/* removes number n from current tmp-array */
 static void rem_n_tmp(int n)
 {
   int i;
@@ -96,7 +96,7 @@ static void rem_n_tmp(int n)
     }
 }
 
-// determines subsquare-number k that contains index (i,j)
+/* determines subsquare-number k that contains index (i,j) */
 static int get_squ_number(int i, int j)
 {
   int ret;
@@ -112,7 +112,7 @@ static int get_squ_number(int i, int j)
   return ret;
 }
 
-// removes n from ns at (i,j) in row, column, and subsquare
+/* removes n from ns at (i,j) in row, column, and subsquare */
 static void rem_n_at(struct s *sp, int i, int j)
 {
   load_row(sp,i);
@@ -140,7 +140,7 @@ static void set_n_at(struct s *sp, int i, int j, int n)
     }
 }
 
-// removes n from ns in row, column and subsquare for each entry
+/* removes n from ns in row, column and subsquare for each entry */
 static void init_ns(struct s *sp)
 {
   int i, j;
@@ -156,7 +156,7 @@ static void init_ns(struct s *sp)
     }
 }
 
-// sets n at (i,j). Should only be called when popcount(ns) == 1
+/* sets n at (i,j). Should only be called when popcount(ns) == 1 */
 static void set_single(struct s *sp, int i, int j)
 {
   int k,tmp;
@@ -169,7 +169,7 @@ static void set_single(struct s *sp, int i, int j)
     }
 }
 
-// sets all fields that have popcount(ns) == 1
+/* sets all fields that have popcount(ns) == 1 */
 static void set_singles(struct s *sp)
 {
   int i,j;
@@ -185,7 +185,7 @@ static void set_singles(struct s *sp)
     }
 }
 
-// if uniq n was found in tmp, set it
+/* if uniq n was found in tmp, set it */
 static void set_uniq_tmp(struct s *sp, int n)
 {
   int i;
@@ -197,11 +197,11 @@ static void set_uniq_tmp(struct s *sp, int n)
 	  switch (desktop.type)
 	    {
 	    case 'r':
-	      //printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, desktop.index, i, desktop.type, desktop.index);
+	      /* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, desktop.index, i, desktop.type, desktop.index); */
 	      set_n_at(sp, desktop.index, i, n);
 	      break;
 	    case 'c':
-	      //printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, i, desktop.index, desktop.type, desktop.index);
+	      /* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, i, desktop.index, desktop.type, desktop.index); */
 	      set_n_at(sp, i, desktop.index, n);
 	      break;
 	    case 's':
@@ -209,7 +209,7 @@ static void set_uniq_tmp(struct s *sp, int n)
 	      y = 3 * (desktop.index % 3);
 	      u = i / 3;
 	      v = i % 3;
-	      //printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, x + u, y + v,desktop.type, desktop.index);
+	      /* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, x + u, y + v,desktop.type, desktop.index); */
 	      set_n_at(sp, x + u, y + v, n);
 	      break;
 	    }
@@ -217,7 +217,7 @@ static void set_uniq_tmp(struct s *sp, int n)
     }
 }
 
-// find a uniq in tmp, call the method to set it
+/* find a uniq in tmp, call the method to set it */
 static void find_uniq_tmp(struct s *sp)
 {
   int i,n,c;
@@ -233,13 +233,13 @@ static void find_uniq_tmp(struct s *sp)
 	}
       if (c == 1)
 	{
-	  //printf("found uniq %d\n", n + 1);
+	  /* printf("found uniq %d\n", n + 1); */
 	  set_uniq_tmp(sp, n + 1);
 	}
     }
 }
 
-// find uniqs in rows, columns and subsquares.  Also set them.
+/* find uniqs in rows, columns and subsquares.  Also set them. */
 static void set_uniqs(struct s *sp)
 {
   int k;
@@ -254,7 +254,7 @@ static void set_uniqs(struct s *sp)
     }
 }
 
-// returns number of occurences of n in ns for desktop.fields
+/* returns number of occurences of n in ns for desktop.fields */
 static int fields_ns_contain(int n)
 {
   int i,c;
@@ -268,19 +268,19 @@ static int fields_ns_contain(int n)
     }
 }
 
-// should find 3 in square 1, row 2 and delete it from square 3 in sudoku2.txt
+/* should find 3 in square 1, row 2 and delete it from square 3 in sudoku2.txt */
 static void find_tupel(struct s *sp)
 {
   int i,j,c,d,u,v,n,tupel,tupel_n;
   load_row(sp, 2);
-  // tupel determines the startpoints of the three tripels in desktop.fields
+  /* tupel determines the startpoints of the three tripels in desktop.fields */
   for (tupel = 0; tupel < 9; tupel += 3)
     {
-      // tupel_n are the numbers to look for in each tripel
+      /* tupel_n are the numbers to look for in each tripel */
       for (tupel_n = 0; tupel_n < 9; tupel_n++)
 	{
 	  c = 0;
-	  // i iterates over the tripel
+	  /* i iterates over the tripel */
 	  for (i = tupel; i < tupel + 3; i++)
 	    {
 	      if ( contains(desktop.fields[i]->ns, tupel_n) )
@@ -345,7 +345,7 @@ static void find_tupel(struct s *sp)
 /* } */
 /* } */
 
-// test sum and product of rows
+/* test sum and product of rows */
 static int test(struct s *sp)
 {
   int i,j,p,s,ret,c;
@@ -378,7 +378,7 @@ int solver(struct s *sp, int inter)
       changed = false;
       set_singles(sp);
       set_uniqs(sp);
-      //find_tupel(sp);
+      /* find_tupel(sp); */
     }
   while (changed == true);
   find_tupel(sp);

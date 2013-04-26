@@ -10,7 +10,7 @@ struct s* reader(FILE *fp)
     {
       for (j = 0; j < 9; j++)
 	{
-	  //struct f *field = (struct f *) malloc (sizeof(struct f));
+	  /* struct f *field = (struct f *) malloc (sizeof(struct f)); */
 	  fscanf(fp, "%1d", &(sudoku.a[i][j].n));
 	  if (sudoku.a[i][j].n == 0)
 	    {
