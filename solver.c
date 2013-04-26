@@ -5,17 +5,30 @@ enum bool {false = 0, true = 1};
 enum bool changed;
 enum bool interactive = false;
 
+/* I didn't know how to call this struct, but I think desk fits
+   nicely, since I intend to load all the relevant information I have
+   about the current working row/column/square into this struct
+   (putting it on the desk).  Then I do all the work like removing
+   possible numbers, putting uniquely defined numbers in the right
+   places and so on.  After that I put something else on the desk to
+   work on. */
+
 static struct desk
 {
-  /* fields contains points to row, column or subsquare */
+  /* fields contains pointers to row, column or subsquare */
   struct f *fields[9];
+
   /* index contains index of row, column or subsquare */
   int index;
+
   /* type contains 'r' for row, 'c' for column, 's' for subsquare */
   char type;
 } desktop;
 
-/* determines the hamming-weight of ns */
+/* Determine the hamming-weight of number.  The hamming weight of a
+   number is the the number of ones that are needed to write the
+   number down in binary notation. Example:
+   5 in binary notation is 101, so popcount(5) = 3 */
 static int popcount(int ns)
 {
   int c,i;
@@ -28,19 +41,25 @@ static int popcount(int ns)
   return c;
 }
 
-/* returns true if ns contains n, else false */
+/* ns are the possible numbers that can go int a field.
+   Since ns has 0s and 1s in the corresponding places, I was able to
+   use an ugly one-liner.
+   The function returns true if ns contains n, else false. */
 static enum bool contains(int ns, int n)
 {
   return ( (ns & (1 << (n - 1))) > 0 ? true : false);
 }
 
-/* get pointer to field a[i][j] */
+/* Return a pointer to field a[i][j] */
 static struct f *get_fp(struct s *sp, int i, int j)
 {
   return &(sp->a[i][j]);
 }
 
-/* k specifies the row */
+/* loads the row k to the desktop.  So int the desktop-struct, the
+   row can be worked on as if a normal array.  This is not so
+   interesting in case of rows or cols, but more in the function
+   load_squ below*/
 static void load_row(struct s *sp, int k)
 {
   int i;
@@ -52,7 +71,7 @@ static void load_row(struct s *sp, int k)
     }
 }
 
-/* k specifies the column */
+/* Loads column k.  See the comment for load_row */
 static load_col(struct s *sp, int k)
 {
   int i;
@@ -64,7 +83,10 @@ static load_col(struct s *sp, int k)
     }
 }
 
-/* k specifies subsquare k when traversing the sudoku in z-shape */
+/* Load square k to the desk.  The squares are numbered like this:
+   0 1 2
+   3 4 5
+   6 7 8  */
 static load_squ(struct s *sp, int k)
 {
   int i,j,u,v,c;
@@ -82,7 +104,8 @@ static load_squ(struct s *sp, int k)
     }
 }
 
-/* removes number n from current tmp-array */
+/* Removes number n from the row/col/squ that is currently loaded on
+   the desk. */
 static void rem_n_tmp(int n)
 {
   int i;
@@ -96,7 +119,7 @@ static void rem_n_tmp(int n)
     }
 }
 
-/* determines subsquare-number k that contains index (i,j) */
+/* Convert the index (i,j) to a the corresponding number of a square */
 static int get_squ_number(int i, int j)
 {
   int ret;
@@ -112,7 +135,7 @@ static int get_squ_number(int i, int j)
   return ret;
 }
 
-/* removes n from ns at (i,j) in row, column, and subsquare */
+/* Removes n from ns from row/col/squ, that contain the index (i,j) */
 static void rem_n_at(struct s *sp, int i, int j)
 {
   load_row(sp,i);
@@ -123,6 +146,8 @@ static void rem_n_at(struct s *sp, int i, int j)
   rem_n_tmp(sp->a[i][j].n);
 }
 
+/* Set index (i,j) to number n.  Do all the easy removals in the
+   corresponding row/col/squ, and set ns to 0 */
 static void set_n_at(struct s *sp, int i, int j, int n)
 {
   if (interactive)
@@ -140,7 +165,8 @@ static void set_n_at(struct s *sp, int i, int j, int n)
     }
 }
 
-/* removes n from ns in row, column and subsquare for each entry */
+/* Check each entry of the sudoku.  If it is non-zero, do all the
+   according removals with set_n_at */
 static void init_ns(struct s *sp)
 {
   int i, j;
@@ -156,7 +182,9 @@ static void init_ns(struct s *sp)
     }
 }
 
-/* sets n at (i,j). Should only be called when popcount(ns) == 1 */
+/* If there is only one possibilty left for a number, set this
+   number.  This means if popcount(ns) == 1, set the corresponding
+   number. */
 static void set_single(struct s *sp, int i, int j)
 {
   int k,tmp;
@@ -169,7 +197,8 @@ static void set_single(struct s *sp, int i, int j)
     }
 }
 
-/* sets all fields that have popcount(ns) == 1 */
+/* check for fields, where only one possible number is left, and set
+   those fields. */
 static void set_singles(struct s *sp)
 {
   int i,j;
@@ -185,7 +214,7 @@ static void set_singles(struct s *sp)
     }
 }
 
-/* if uniq n was found in tmp, set it */
+/* Assume that find_uniq_tmp below found a number.  Set this number. */
 static void set_uniq_tmp(struct s *sp, int n)
 {
   int i;
@@ -217,7 +246,22 @@ static void set_uniq_tmp(struct s *sp, int n)
     }
 }
 
-/* find a uniq in tmp, call the method to set it */
+/* Check the current desk, if there is a number, that can be set only
+   in one place.  If yes, set this number there.  Artificially
+   constructed example:
+   +-----------+
+   |000|100|000|
+   |000|000|100|
+   |200|000|000|
+   +-----------+
+   |000|010|000|
+   |000|000|010|
+   |300|000|000|
+   +-----------+
+   |000|001|000|
+   |000|000|001| 1 goes in the bottem-left corner, since this is the
+   |x00|000|000| only place, where 1 is possible.
+   +~~~~~~~~~~~~ */
 static void find_uniq_tmp(struct s *sp)
 {
   int i,n,c;
@@ -239,7 +283,7 @@ static void find_uniq_tmp(struct s *sp)
     }
 }
 
-/* find uniqs in rows, columns and subsquares.  Also set them. */
+/* Find uniqs in rows/col/squs.  Set them. */
 static void set_uniqs(struct s *sp)
 {
   int k;
