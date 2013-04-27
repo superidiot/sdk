@@ -362,6 +362,50 @@ static void find_shadows(struct s *sp)
 		}
 	    }
 	  candidates = (511 ^ rest) & candidates;
+	  load_row(sp,row);
+	  for (i = 0; i < 6; i++)
+	    {
+	      if (tripel / 3 == 0)
+		{
+		  if ( desktop.fields[i + 3]->ns !=
+		       (desktop.fields[i + 3]->ns & (~candidates)) )
+		    {
+		      desktop.fields[i + 3]->ns =
+			desktop.fields[i + 3]->ns & (~candidates);
+		      changed = true;
+		    }
+		}  else if (tripel / 3 == 1 )
+		{
+		  if (i < 3)
+		    {
+		      if ( desktop.fields[i]->ns !=
+			   (desktop.fields[i]->ns & (~candidates) ))
+			{
+			  desktop.fields[i]->ns = desktop.fields[i]->ns & (~candidates);
+			  changed = true;
+			}
+		    }
+		  if (i >= 3 )
+		    {
+		      if ( desktop.fields[i + 3]->ns !=
+			   (desktop.fields[i + 3]->ns & (~candidates)))
+			{
+			  desktop.fields[i + 3]->ns =
+			    desktop.fields[i + 3]->ns & (~candidates);
+			  changed = true;
+			}
+		    } else if (tripel / 3 == 2)
+		    {
+		      if ( desktop.fields[i]->ns !=
+			   (desktop.fields[i]->ns & (~candidates)) )
+			{
+			  desktop.fields[i]->ns = desktop.fields[i]->ns & (~candidates);
+			  changed = true;
+			}
+		    }
+		}
+	    }
+
 	  printf("found rest %d at tripel %d\n", rest , tripel);
 	  printf("found reals %d at tripel %d\n", (511 ^ rest) & candidates , tripel);
 	}
