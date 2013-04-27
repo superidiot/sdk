@@ -312,6 +312,59 @@ static int fields_ns_contain(int n)
     }
 }
 
+/* I call this function find_shadows.  I have no better idea.  Since
+   the name is rather bad, I better explain what I want it to do:
+   Assume you have the following sudoku:
+   +-----------+
+   |7_3|x9x|4_8|  Counting from 0, we look at the first square.  3
+   |4__|8x7|___|  cannot go where I put x.  So it has to go to the
+   |98_|_4_|__7|  bottom, left and right to 4.  This means, that we
+   +-----------+  can eliminate 3 from square 2 in the bottom line.
+   |14_|___|_6_|
+   |3_8|___|7_2|  We will plug each triple we have into and.  If the
+   |67_|___|_1_|  result is greater than 0, we plug the result into
+   +-----------+  xor with the remaining numbers.  If the result is
+   |5__|_3_|__6|  greater than 0, we have some numbers we can
+   |83_|2_9|___|  eliminate.  All we have to do is remembering the
+   |2_4|_5_|3_9|  indices.
+   +-----------+
+*/
+static void find_shadows(struct s *sp)
+{
+  int tripel; /* specify at which tripel you are working */
+  int candidates; /* holds all the numbers that can go into the
+		     current tripel */
+  int rest; /* holds the rest of the current 9-tupel to verify the
+	       candidates.*/
+  int i;
+
+  for (tripel = 0; tripel < 9; tripel += 3)
+    {
+      load_row(sp, 2);
+      candidates = (desktop.fields[tripel]->ns |
+		    desktop.fields[tripel + 1]->ns |
+		    desktop.fields[tripel + 2]->ns);
+      rest = 0;
+      printf("found candidates %d at tripel %d\n", candidates, tripel);
+      load_squ(sp, tripel / 3);
+      for (i = 0; i < 6; i++)
+	{
+	  /* if (tripel == 0){
+	    rest = rest | desktop.fields[i + 3]->ns;
+	    }  else if (tripel == 3)
+	    {
+	      if (i < 3) rest = rest | desktop.fields[i]->ns;
+	      if (i >= 3 ) rest = rest | desktop.fields[i + 3]->ns;
+	    } else if (tripel == 6)
+	    { */
+	      rest = rest | desktop.fields[i]->ns;
+	      /* } */
+	}
+      printf("found rest %d at tripel %d\n", rest , tripel);
+      printf("found reals %d at tripel %d\n", (511 ^ rest) & candidates , tripel);
+    }
+}
+
 /* should find 3 in square 1, row 2 and delete it from square 3 in sudoku2.txt */
 static void find_tupel(struct s *sp)
 {
@@ -376,6 +429,6 @@ int solver(struct s *sp, int inter)
       /* find_tupel(sp); */
     }
   while (changed == true);
-  find_tupel(sp);
+  find_shadows(sp);
   return test(sp);
 }
