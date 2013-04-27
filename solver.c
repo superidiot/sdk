@@ -346,7 +346,7 @@ static void find_shadows(struct s *sp)
 			desktop.fields[tripel + 1]->ns |
 			desktop.fields[tripel + 2]->ns);
 	  rest = 0;
-	  printf("found candidates %d at tripel %d\n", candidates, tripel);
+	  /* printf("found candidates %d at tripel %d\n", candidates, tripel); */
 	  load_squ(sp, get_squ_number(row,tripel));
 	  for (i = 0; i < 6; i++)
 	    {
@@ -406,9 +406,15 @@ static void find_shadows(struct s *sp)
 		}
 	    }
 
-	  printf("found rest %d at tripel %d\n", rest , tripel);
-	  printf("found reals %d at tripel %d\n", (511 ^ rest) & candidates , tripel);
+	  /* printf("found rest %d at tripel %d\n", rest , tripel); */
+	  /* printf("found reals %d in row %d at tripel %d\n", */
+	  /* 	 (511 ^ rest) & candidates , row,tripel); */
 	}
+    }
+
+  if (interactive)
+    {
+      printer_cli(sp);
     }
 }
 
@@ -445,9 +451,8 @@ int solver(struct s *sp, int inter)
       changed = false;
       set_singles(sp);
       set_uniqs(sp);
-      /* find_tupel(sp); */
+      find_shadows(sp);
     }
   while (changed == true);
-  find_shadows(sp);
   return test(sp);
 }
