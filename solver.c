@@ -412,34 +412,6 @@ static void find_shadows(struct s *sp)
     }
 }
 
-/* should find 3 in square 1, row 2 and delete it from square 3 in sudoku2.txt */
-static void find_tupel(struct s *sp)
-{
-  int i,j,c,d,u,v,n,tupel,tupel_n;
-  load_row(sp, 2);
-  /* tupel determines the startpoints of the three tripels in desktop.fields */
-  for (tupel = 0; tupel < 9; tupel += 3)
-    {
-      /* tupel_n are the numbers to look for in each tripel */
-      for (tupel_n = 0; tupel_n < 9; tupel_n++)
-	{
-	  c = 0;
-	  /* i iterates over the tripel */
-	  for (i = tupel; i < tupel + 3; i++)
-	    {
-	      if ( contains(desktop.fields[i]->ns, tupel_n) )
-		{
-		  c++;
-		}
-	    }
-	  if (c > 0)
-	    {
-	      printf("found candidate %d at tupel %d in row 2\n", tupel_n, tupel);
-	    }
-	}
-    }
-}
-
 /* test sum and product of rows */
 static int test(struct s *sp)
 {
