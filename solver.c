@@ -336,32 +336,35 @@ static void find_shadows(struct s *sp)
 		     current tripel */
   int rest; /* holds the rest of the current 9-tupel to verify the
 	       candidates.*/
-  int i;
-
-  for (tripel = 0; tripel < 9; tripel += 3)
+  int i,row;
+  for (row = 0; row < 9; row++)
     {
-      load_row(sp, 2);
-      candidates = (desktop.fields[tripel]->ns |
-		    desktop.fields[tripel + 1]->ns |
-		    desktop.fields[tripel + 2]->ns);
-      rest = 0;
-      printf("found candidates %d at tripel %d\n", candidates, tripel);
-      load_squ(sp, tripel / 3);
-      for (i = 0; i < 6; i++)
+      for (tripel = 0; tripel < 9; tripel += 3)
 	{
-	  /* if (tripel == 0){
-	    rest = rest | desktop.fields[i + 3]->ns;
-	    }  else if (tripel == 3)
+	  load_row(sp, row);
+	  candidates = (desktop.fields[tripel]->ns |
+			desktop.fields[tripel + 1]->ns |
+			desktop.fields[tripel + 2]->ns);
+	  rest = 0;
+	  printf("found candidates %d at tripel %d\n", candidates, tripel);
+	  load_squ(sp, get_squ_number(row,tripel));
+	  for (i = 0; i < 6; i++)
 	    {
-	      if (i < 3) rest = rest | desktop.fields[i]->ns;
-	      if (i >= 3 ) rest = rest | desktop.fields[i + 3]->ns;
-	    } else if (tripel == 6)
-	    { */
-	      rest = rest | desktop.fields[i]->ns;
-	      /* } */
+	      if (row % 3 == 0){
+		rest = rest | desktop.fields[i + 3]->ns;
+	      }  else if (row % 3 == 1 )
+		{
+		  if (i < 3) rest = rest | desktop.fields[i]->ns;
+		  if (i >= 3 ) rest = rest | desktop.fields[i + 3]->ns;
+		} else if (row % 3 == 2)
+		{
+		  rest = rest | desktop.fields[i]->ns;
+		}
+	    }
+	  candidates = (511 ^ rest) & candidates;
+	  printf("found rest %d at tripel %d\n", rest , tripel);
+	  printf("found reals %d at tripel %d\n", (511 ^ rest) & candidates , tripel);
 	}
-      printf("found rest %d at tripel %d\n", rest , tripel);
-      printf("found reals %d at tripel %d\n", (511 ^ rest) & candidates , tripel);
     }
 }
 
