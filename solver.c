@@ -298,7 +298,7 @@ static void set_uniqs(struct s *sp)
     }
 }
 
-/* returns number of occurences of n in ns for desktop.fields */
+/* Returns number of occurences of n in ns for desktop.fields */
 static int fields_ns_contain(int n)
 {
   int i,c;
@@ -339,55 +339,6 @@ static void find_tupel(struct s *sp)
 	}
     }
 }
-/* for (j = 0; j < 9; j++)
-   { */
-/*   c = 0; */
-/* for (i = 3; i < 6; i++)
-   { */
-/*   if (contains(sp->a[2][i].ns, j + 1))
-     { */
-/* 	c++; */
-/*   } */
-/* } */
-/* if (c > 1)
-   { */
-/*   printf("possibly found tupel of %d\n", j + 1); */
-/*   load_squ(sp, 1); */
-/*   d = 0; */
-/*   for (u = 0; u < 6; u++)
-     { */
-/* 	if (contains(desktop.fields[u]->ns, j + 1))
-	{ */
-/* 	  d++; */
-/* 	} */
-/*   } */
-/*   if (d > 0)
-     { */
-/* 	printf("%d is not what we want\n", j + 1); */
-/*   } else if (d == 0)
-     { */
-/* 	printf("%d is very nice\n", j + 1); */
-/* 	load_row(sp, 2); */
-/* 	for (v = 0; v < 3; v++)
-	{ */
-/* 	  if (contains(desktop.fields[v]->ns, j + 1))
-	  { */
-/* 	    desktop.fields[v]->ns &= ~(1 << j); */
-/* 	    changed = true; */
-/* 	  } */
-/* 	} */
-/* 	for (v = 6; v < 9; v++)
-	{ */
-/* 	  if (contains(desktop.fields[v]->ns, j + 1))
-	  { */
-/* 	    desktop.fields[v]->ns &= ~(1 << j); */
-/* 	    changed = true; */
-/* 	  } */
-/* 	} */
-/*   } */
-/* } */
-/* } */
-/* } */
 
 /* test sum and product of rows */
 static int test(struct s *sp)
