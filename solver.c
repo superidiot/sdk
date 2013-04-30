@@ -50,10 +50,10 @@ static enum bool contains(int ns, int n)
   return ( (ns & (1 << (n - 1))) > 0 ? true : false);
 }
 
-/* Return a pointer to field a[i][j] */
+/* Return a pointer to field normal[i][j] */
 static struct f *get_fp(struct s *sp, int i, int j)
 {
-  return &(sp->a[i][j]);
+  return &(sp->normal[i][j]);
 }
 
 /* loads the row k to the desktop.  So int the desktop-struct, the
@@ -67,7 +67,7 @@ static void load_row(struct s *sp, int k)
   desktop.index = k;
   for (i = 0; i < 9; i++)
     {
-      desktop.fields[i] = &(sp->a[k][i]);
+      desktop.fields[i] = &(sp->normal[k][i]);
     }
 }
 
@@ -79,7 +79,7 @@ static load_col(struct s *sp, int k)
   desktop.index = k;
   for (i = 0; i < 9; i++)
     {
-      desktop.fields[i] = &(sp->a[i][k]);
+      desktop.fields[i] = &(sp->normal[i][k]);
     }
 }
 
@@ -99,7 +99,7 @@ static load_squ(struct s *sp, int k)
     {
       for (v = 0; v < 3; v++)
 	{
-	  desktop.fields[c++] = &(sp->a[i + u][j + v]);
+	  desktop.fields[c++] = &(sp->normal[i + u][j + v]);
 	}
     }
 }
@@ -139,11 +139,11 @@ static int get_squ_number(int i, int j)
 static void rem_n_at(struct s *sp, int i, int j)
 {
   load_row(sp,i);
-  rem_n_tmp(sp->a[i][j].n);
+  rem_n_tmp(sp->normal[i][j].n);
   load_col(sp,j);
-  rem_n_tmp(sp->a[i][j].n);
+  rem_n_tmp(sp->normal[i][j].n);
   load_squ(sp, get_squ_number(i, j) );
-  rem_n_tmp(sp->a[i][j].n);
+  rem_n_tmp(sp->normal[i][j].n);
 }
 
 /* Set index (i,j) to number n.  Do all the easy removals in the
@@ -155,8 +155,8 @@ static void set_n_at(struct s *sp, int i, int j, int n)
       printf("setting %d at (%d,%d)\n", n, i, j);
       getchar();
     }
-  sp->a[i][j].n = n;
-  sp->a[i][j].ns = 0;
+  sp->normal[i][j].n = n;
+  sp->normal[i][j].ns = 0;
   rem_n_at(sp, i, j);
   changed = true;
   if (interactive)
@@ -174,7 +174,7 @@ static void init_ns(struct s *sp)
     {
       for (j = 0; j < 9; j++)
 	{
-	  if (sp->a[i][j].n != 0)
+	  if (sp->normal[i][j].n != 0)
 	    {
 	      rem_n_at(sp, i, j);
 	    }
@@ -190,7 +190,7 @@ static void set_single(struct s *sp, int i, int j)
   int k,tmp;
   for (k = 0; k < 9; k++)
     {
-      if ((1 << k) == sp->a[i][j].ns)
+      if ((1 << k) == sp->normal[i][j].ns)
 	{
 	  set_n_at(sp, i, j, (k + 1));
 	}
@@ -206,7 +206,7 @@ static void set_singles(struct s *sp)
     {
       for (j = 0; j < 9; j++)
 	{
-	  if (popcount(sp->a[i][j].ns) == 1)
+	  if (popcount(sp->normal[i][j].ns) == 1)
 	    {
 	      set_single(sp,i,j);
 	    }
@@ -429,8 +429,8 @@ static int test(struct s *sp)
       p = 1;
       for (j = 0; j < 9; j++)
 	{
-	  s += sp->a[i][j].n;
-	  p *= sp->a[i][j].n;
+	  s += sp->normal[i][j].n;
+	  p *= sp->normal[i][j].n;
 	}
       if (p == 362880 && s == 45)
 	{

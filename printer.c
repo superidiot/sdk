@@ -34,9 +34,9 @@ void printer_cli (struct s *sp)
 	    {
 	      printf("%s","|");
 	    }
-	  if (sp->a[i][j].n != 0)
+	  if (sp->normal[i][j].n != 0)
 	    {
-	      printf("%1d", sp->a[i][j].n);
+	      printf("%1d", sp->normal[i][j].n);
 	    }
 	  else 
 	    {
@@ -53,7 +53,7 @@ void printer_cli (struct s *sp)
 	{
 	  int k;
 	  int tmp;
-	  tmp = sp->a[i][j].ns;
+	  tmp = sp->normal[i][j].ns;
 	  if (tmp == 0)
 	    {
 	      printf("%s", "_________");
@@ -85,9 +85,9 @@ void printer_ps (
     {
       for (i = 0; i < 9; i++)
 	{
-	  if (sp->a[i][j].n != 0)
+	  if (sp->normal[i][j].n != 0)
 	    {
-	      fprintf(psfile, "offset moveto %d cm %d cm rmoveto (%d) showNumber\n", j, (8 - i), sp->a[i][j].n);
+	      fprintf(psfile, "offset moveto %d cm %d cm rmoveto (%d) showNumber\n", j, (8 - i), sp->normal[i][j].n);
 	    } else 
 	    {
 	      fprintf(psfile, "gsave /Helvetica findfont 5 scalefont setfont offset moveto %d cm %d cm rmoveto 0 20 rmoveto (", j, (8 - i));
@@ -95,7 +95,7 @@ void printer_ps (
 		{
 		  if ( k < 3 )
 		    {
-		      if (sp->a[i][j].ns != 0)
+		      if (sp->normal[i][j].ns != 0)
 			{
 			  fprintf(psfile, "%d  ", k);
 			} else 
@@ -104,7 +104,7 @@ void printer_ps (
 			}
 		    } else if ( k == 3 )
 		    {
-		      if (sp->a[i][j].ns != 0)
+		      if (sp->normal[i][j].ns != 0)
 			{
 			  fprintf(psfile, "%d) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show offset moveto %d cm %d cm rmoveto 0 13 rmoveto (", k, j, (8 - i));
 			} else
@@ -113,7 +113,7 @@ void printer_ps (
 			}
 		    } else if ( (k >= 2) && (k < 6) )
 		    {
-		      if (sp->a[i][j].ns != 0)
+		      if (sp->normal[i][j].ns != 0)
 			{
 			  fprintf(psfile, "%d  ", k);
 			} else
@@ -123,7 +123,7 @@ void printer_ps (
 		    } 
 		  else if ( k == 6 )
 		    {
-		      if (sp->a[i][j].ns != 0)
+		      if (sp->normal[i][j].ns != 0)
 			{
 			  fprintf(psfile, "%d) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show offset moveto %d cm %d cm 6 add rmoveto (", k, j, (8 - i));
 			} else
@@ -132,7 +132,7 @@ void printer_ps (
 			}
 		    } else if ( (k >= 5) && (k < 9) )
 		    {
-		      if (sp->a[i][j].ns != 0)
+		      if (sp->normal[i][j].ns != 0)
 			{
 			  fprintf(psfile, "%d  ", k);
 			} else 
@@ -141,7 +141,7 @@ void printer_ps (
 			}
 		    } else if ( k == 9 )
 		    {
-		      if (sp->a[i][j].ns != 0)
+		      if (sp->normal[i][j].ns != 0)
 			{
 			  fprintf(psfile, "%d) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show grestore\n", k);
 			} else 
