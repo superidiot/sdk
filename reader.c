@@ -13,7 +13,15 @@ struct s* reader(FILE *fp)
 	  fscanf(fp, "%1d", &(sudoku.normal[i][j].n));
 	  if (sudoku.normal[i][j].n == 0)
 	    {
-	      sudoku.a[i][j].ns = ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE;
+	      sudoku.normal[i][j].ns = ONE   |
+		                  TWO   |
+		                  THREE |
+		                  FOUR  |
+		                  FIVE  |
+		                  SIX   |
+		                  SEVEN |
+		                  EIGHT |
+		                  NINE;
 	    }
 	  else
 	    {
