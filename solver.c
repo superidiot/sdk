@@ -98,9 +98,9 @@ static load_squ(struct s *sp, int k)
   for (u = 0; u < 3; u++)
     {
       for (v = 0; v < 3; v++)
-	{
-	  desktop.fields[c++] = &(sp->normal[i + u][j + v]);
-	}
+        {
+          desktop.fields[c++] = &(sp->normal[i + u][j + v]);
+        }
     }
 }
 
@@ -112,10 +112,10 @@ static void rem_n_tmp(int n)
   for (i = 0; i < 9; i++)
     {
       if ( contains(desktop.fields[i]->ns, n) )
-	{
-	  desktop.fields[i]->ns &= ~(1 << (n - 1));
-	  changed = true;
-	}
+        {
+          desktop.fields[i]->ns &= ~(1 << (n - 1));
+          changed = true;
+        }
     }
 }
 
@@ -173,12 +173,12 @@ static void init_ns(struct s *sp)
   for (i = 0; i < 9; i++)
     {
       for (j = 0; j < 9; j++)
-	{
-	  if (sp->normal[i][j].n != 0)
-	    {
-	      rem_n_at(sp, i, j);
-	    }
-	}
+        {
+          if (sp->normal[i][j].n != 0)
+            {
+              rem_n_at(sp, i, j);
+            }
+        }
     }
 }
 
@@ -191,9 +191,9 @@ static void set_single(struct s *sp, int i, int j)
   for (k = 0; k < 9; k++)
     {
       if ((1 << k) == sp->normal[i][j].ns)
-	{
-	  set_n_at(sp, i, j, (k + 1));
-	}
+        {
+          set_n_at(sp, i, j, (k + 1));
+        }
     }
 }
 
@@ -205,12 +205,12 @@ static void set_singles(struct s *sp)
   for (i = 0; i < 9; i++)
     {
       for (j = 0; j < 9; j++)
-	{
-	  if (popcount(sp->normal[i][j].ns) == 1)
-	    {
-	      set_single(sp,i,j);
-	    }
-	}
+        {
+          if (popcount(sp->normal[i][j].ns) == 1)
+            {
+              set_single(sp,i,j);
+            }
+        }
     }
 }
 
@@ -222,27 +222,27 @@ static void set_uniq_tmp(struct s *sp, int n)
   for (i = 0; i < 9; i++)
     {
       if ( contains(desktop.fields[i]->ns, n) )
-	{
-	  switch (desktop.type)
-	    {
-	    case 'r':
-	      /* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, desktop.index, i, desktop.type, desktop.index); */
-	      set_n_at(sp, desktop.index, i, n);
-	      break;
-	    case 'c':
-	      /* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, i, desktop.index, desktop.type, desktop.index); */
-	      set_n_at(sp, i, desktop.index, n);
-	      break;
-	    case 's':
-	      x = 3 * (desktop.index / 3);
-	      y = 3 * (desktop.index % 3);
-	      u = i / 3;
-	      v = i % 3;
-	      /* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, x + u, y + v,desktop.type, desktop.index); */
-	      set_n_at(sp, x + u, y + v, n);
-	      break;
-	    }
-	}
+        {
+          switch (desktop.type)
+            {
+            case 'r':
+              /* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, desktop.index, i, desktop.type, desktop.index); */
+              set_n_at(sp, desktop.index, i, n);
+              break;
+            case 'c':
+              /* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, i, desktop.index, desktop.type, desktop.index); */
+              set_n_at(sp, i, desktop.index, n);
+              break;
+            case 's':
+              x = 3 * (desktop.index / 3);
+              y = 3 * (desktop.index % 3);
+              u = i / 3;
+              v = i % 3;
+              /* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, x + u, y + v,desktop.type, desktop.index); */
+              set_n_at(sp, x + u, y + v, n);
+              break;
+            }
+        }
     }
 }
 
@@ -269,17 +269,17 @@ static void find_uniq_tmp(struct s *sp)
     {
       c = 0;
       for (i = 0; i < 9; i++)
-	{
-	  if ( contains(desktop.fields[i]->ns, (n + 1)) )
-	    {
-	      c++;
-	    }
-	}
+        {
+          if ( contains(desktop.fields[i]->ns, (n + 1)) )
+            {
+              c++;
+            }
+        }
       if (c == 1)
-	{
-	  /* printf("found uniq %d\n", n + 1); */
-	  set_uniq_tmp(sp, n + 1);
-	}
+        {
+          /* printf("found uniq %d\n", n + 1); */
+          set_uniq_tmp(sp, n + 1);
+        }
     }
 }
 
@@ -306,9 +306,9 @@ static int fields_ns_contain(int n)
   for (i = 0; i < 9; i++)
     {
       if (contains(desktop.fields[i]->ns, n))
-	{
-	  c++;
-	}
+        {
+          c++;
+        }
     }
 }
 
@@ -333,83 +333,83 @@ static void find_shadows(struct s *sp)
 {
   int tripel; /* specify at which tripel you are working */
   int candidates; /* holds all the numbers that can go into the
-		     current tripel */
+                     current tripel */
   int rest; /* holds the rest of the current 9-tupel to verify the
-	       candidates.*/
+               candidates.*/
   int i,row;
   for (row = 0; row < 9; row++)
     {
       for (tripel = 0; tripel < 9; tripel += 3)
-	{
-	  load_row(sp, row);
-	  candidates = (desktop.fields[tripel]->ns |
-			desktop.fields[tripel + 1]->ns |
-			desktop.fields[tripel + 2]->ns);
-	  rest = 0;
-	  /* printf("found candidates %d at tripel %d\n", candidates, tripel); */
-	  load_squ(sp, get_squ_number(row,tripel));
-	  for (i = 0; i < 6; i++)
-	    {
-	      if (row % 3 == 0){
-		rest = rest | desktop.fields[i + 3]->ns;
-	      }  else if (row % 3 == 1 )
-		{
-		  if (i < 3) rest = rest | desktop.fields[i]->ns;
-		  if (i >= 3 ) rest = rest | desktop.fields[i + 3]->ns;
-		} else if (row % 3 == 2)
-		{
-		  rest = rest | desktop.fields[i]->ns;
-		}
-	    }
-	  candidates = (511 ^ rest) & candidates;
-	  load_row(sp,row);
-	  for (i = 0; i < 6; i++)
-	    {
-	      if (tripel / 3 == 0)
-		{
-		  if ( desktop.fields[i + 3]->ns !=
-		       (desktop.fields[i + 3]->ns & (~candidates)) )
-		    {
-		      desktop.fields[i + 3]->ns =
-			desktop.fields[i + 3]->ns & (~candidates);
-		      changed = true;
-		    }
-		}  else if (tripel / 3 == 1 )
-		{
-		  if (i < 3)
-		    {
-		      if ( desktop.fields[i]->ns !=
-			   (desktop.fields[i]->ns & (~candidates) ))
-			{
-			  desktop.fields[i]->ns = desktop.fields[i]->ns & (~candidates);
-			  changed = true;
-			}
-		    }
-		  if (i >= 3 )
-		    {
-		      if ( desktop.fields[i + 3]->ns !=
-			   (desktop.fields[i + 3]->ns & (~candidates)))
-			{
-			  desktop.fields[i + 3]->ns =
-			    desktop.fields[i + 3]->ns & (~candidates);
-			  changed = true;
-			}
-		    } else if (tripel / 3 == 2)
-		    {
-		      if ( desktop.fields[i]->ns !=
-			   (desktop.fields[i]->ns & (~candidates)) )
-			{
-			  desktop.fields[i]->ns = desktop.fields[i]->ns & (~candidates);
-			  changed = true;
-			}
-		    }
-		}
-	    }
+        {
+          load_row(sp, row);
+          candidates = (desktop.fields[tripel]->ns |
+                        desktop.fields[tripel + 1]->ns |
+                        desktop.fields[tripel + 2]->ns);
+          rest = 0;
+          /* printf("found candidates %d at tripel %d\n", candidates, tripel); */
+          load_squ(sp, get_squ_number(row,tripel));
+          for (i = 0; i < 6; i++)
+            {
+              if (row % 3 == 0){
+                rest = rest | desktop.fields[i + 3]->ns;
+              }  else if (row % 3 == 1 )
+                {
+                  if (i < 3) rest = rest | desktop.fields[i]->ns;
+                  if (i >= 3 ) rest = rest | desktop.fields[i + 3]->ns;
+                } else if (row % 3 == 2)
+                {
+                  rest = rest | desktop.fields[i]->ns;
+                }
+            }
+          candidates = (511 ^ rest) & candidates;
+          load_row(sp,row);
+          for (i = 0; i < 6; i++)
+            {
+              if (tripel / 3 == 0)
+                {
+                  if ( desktop.fields[i + 3]->ns !=
+                       (desktop.fields[i + 3]->ns & (~candidates)) )
+                    {
+                      desktop.fields[i + 3]->ns =
+                        desktop.fields[i + 3]->ns & (~candidates);
+                      changed = true;
+                    }
+                }  else if (tripel / 3 == 1 )
+                {
+                  if (i < 3)
+                    {
+                      if ( desktop.fields[i]->ns !=
+                           (desktop.fields[i]->ns & (~candidates) ))
+                        {
+                          desktop.fields[i]->ns = desktop.fields[i]->ns & (~candidates);
+                          changed = true;
+                        }
+                    }
+                  if (i >= 3 )
+                    {
+                      if ( desktop.fields[i + 3]->ns !=
+                           (desktop.fields[i + 3]->ns & (~candidates)))
+                        {
+                          desktop.fields[i + 3]->ns =
+                            desktop.fields[i + 3]->ns & (~candidates);
+                          changed = true;
+                        }
+                    } else if (tripel / 3 == 2)
+                    {
+                      if ( desktop.fields[i]->ns !=
+                           (desktop.fields[i]->ns & (~candidates)) )
+                        {
+                          desktop.fields[i]->ns = desktop.fields[i]->ns & (~candidates);
+                          changed = true;
+                        }
+                    }
+                }
+            }
 
-	  /* printf("found rest %d at tripel %d\n", rest , tripel); */
-	  /* printf("found reals %d in row %d at tripel %d\n", */
-	  /* 	 (511 ^ rest) & candidates , row,tripel); */
-	}
+          /* printf("found rest %d at tripel %d\n", rest , tripel); */
+          /* printf("found reals %d in row %d at tripel %d\n", */
+          /*     (511 ^ rest) & candidates , row,tripel); */
+        }
     }
 
   if (interactive)
@@ -428,14 +428,14 @@ static int test(struct s *sp)
       s = 0;
       p = 1;
       for (j = 0; j < 9; j++)
-	{
-	  s += sp->normal[i][j].n;
-	  p *= sp->normal[i][j].n;
-	}
+        {
+          s += sp->normal[i][j].n;
+          p *= sp->normal[i][j].n;
+        }
       if (p == 362880 && s == 45)
-	{
-	  c++;
-	}
+        {
+          c++;
+        }
     }
   return (c == 9 ? 0 : -1);
 }
