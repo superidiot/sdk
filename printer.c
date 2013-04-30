@@ -38,7 +38,7 @@ void printer_cli (struct s *sp)
 	    {
 	      printf("%1d", sp->normal[i][j].n);
 	    }
-	  else 
+	  else
 	    {
 	      printf("%s", "_");
 	    }
@@ -46,7 +46,7 @@ void printer_cli (struct s *sp)
       printf("%1s","|\n");
     }
   printf("%s","+-----------+\n");
-  
+
   for (i = 0; i < 9; i++)
     {
       for (j = 0; j < 9; j++)
@@ -58,7 +58,7 @@ void printer_cli (struct s *sp)
 	    {
 	      printf("%s", "_________");
 	    }
-	  else 
+	  else
 	    {
 	      print_bin(tmp);
 	    }
@@ -69,15 +69,15 @@ void printer_cli (struct s *sp)
 }
 
 void printer_ps (
-		 struct s *sp, 
-		 const char *filename, 
-		 int offsetX, 
-		 int offsetY, 
+		 struct s *sp,
+		 const char *filename,
+		 int offsetX,
+		 int offsetY,
 		 const char *mode)
 {
   int i,j,k;
   FILE *psfile = fopen(filename, mode);
-  
+
   fprintf(psfile, "/cm {28.34 mul} def /fontGr {20} def /gr {1} def /showNumber {dup stringwidth pop gr cm sub 2 div neg gr cm fontGr 4 mul 5 div sub 2 div rmoveto show} def /offset {%d cm %d cm} def ", offsetX, offsetY);
   fprintf(psfile, "%s", "newpath gsave 2 setlinewidth offset moveto 9 cm 0 cm rlineto 0 cm 9 cm rlineto -9 cm 0 cm rlineto 0 cm -9 cm rlineto closepath stroke 3 3 6 { offset moveto cm 0 rmoveto 0 9 cm rlineto stroke } for 3 3 6 { offset moveto cm 0 exch rmoveto 9 cm 0 rlineto stroke } for grestore offset moveto 1 1 9 { dup cm 0 rmoveto 0 cm 9 cm rlineto neg cm -9 cm rmoveto } for offset moveto 1 1 9 { dup cm 0 exch rmoveto 9 cm 0 cm rlineto neg cm -9 cm exch rmoveto } for stroke\n");
   fprintf(psfile, "%s", "/Helvetica-Bold findfont fontGr scalefont setfont\noffset moveto\n");
@@ -88,7 +88,7 @@ void printer_ps (
 	  if (sp->normal[i][j].n != 0)
 	    {
 	      fprintf(psfile, "offset moveto %d cm %d cm rmoveto (%d) showNumber\n", j, (8 - i), sp->normal[i][j].n);
-	    } else 
+	    } else
 	    {
 	      fprintf(psfile, "gsave /Helvetica findfont 5 scalefont setfont offset moveto %d cm %d cm rmoveto 0 20 rmoveto (", j, (8 - i));
 	      for (k = 1; k < 10; k++)
@@ -98,7 +98,7 @@ void printer_ps (
 		      if (sp->normal[i][j].ns != 0)
 			{
 			  fprintf(psfile, "%d  ", k);
-			} else 
+			} else
 			{
 			  fprintf(psfile, "%s", "    ");
 			}
@@ -120,7 +120,7 @@ void printer_ps (
 			{
 			  fprintf(psfile, "%s", "    ");
 			}
-		    } 
+		    }
 		  else if ( k == 6 )
 		    {
 		      if (sp->normal[i][j].ns != 0)
@@ -135,7 +135,7 @@ void printer_ps (
 		      if (sp->normal[i][j].ns != 0)
 			{
 			  fprintf(psfile, "%d  ", k);
-			} else 
+			} else
 			{
 			  fprintf(psfile, "%s", "    ");
 			}
@@ -144,7 +144,7 @@ void printer_ps (
 		      if (sp->normal[i][j].ns != 0)
 			{
 			  fprintf(psfile, "%d) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show grestore\n", k);
-			} else 
+			} else
 			{
 			  fprintf(psfile, "%s", "  ) dup stringwidth pop gr cm sub 2 div neg 0 rmoveto show grestore\n");
 			}
@@ -152,6 +152,6 @@ void printer_ps (
 		}
 	    }
 	}
-    } 
+    }
   fclose(psfile);
 }
