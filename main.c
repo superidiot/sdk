@@ -39,7 +39,7 @@ main (int argc, char *argv[])
       printf("%s", "You should give me a sudoku file.\n");
       printf("%s", "Run this command with -h for more information.\n");
     }
-  else 
+  else
     {
       int i,j;
       FILE *fp = fopen(file,"r");
