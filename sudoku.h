@@ -4,7 +4,10 @@ struct f {
 };
 
 struct s {
-  struct f a[9][9];
+  struct f normal[9][9];
+  struct f transposed[9][9];
+  struct f transformed[9][9];
+  struct f transforposed[9][9];
 };
 
 struct s sudoku;
