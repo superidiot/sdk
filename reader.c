@@ -38,8 +38,6 @@ struct s* reader(FILE *fp)
     {
       for (j = 0; j < 9; j++)
 	{
-	  /* MATRIX_COL_MAJOR_IDX(sudoku.transforposed, 9, i, j) = */
-	  /*   MATRIX_ROW_MAJOR_IDX(sudoku.transformed, 9, i, j); */
 	  MATRIX_COL_MAJOR_IDX(sudoku.transposed, 9, i, j) =
 	    MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j);
 
