@@ -14,23 +14,23 @@ main (int argc, char *argv[])
       c = *++argv[0];
       switch (c){
       case 'f':
-	i = 0;
-	while ( (file[i++] = *argv[1]++) != '\0') ;
-	argc--;
-	argv++;
-	break;
+        i = 0;
+        while ( (file[i++] = *argv[1]++) != '\0') ;
+        argc--;
+        argv++;
+        break;
       case 'i':
-	interactive = 1;
-	break;
+        interactive = 1;
+        break;
       case 'h':
-	printf("%s", "Options for sudoku:\n");
-	printf("%s", "-f file: specify sudoku-file. This is not optional\n");
-	printf("%s", "-i run interactive\n");
-	printf("%s", "-h: this message\n");
-	break;
+        printf("%s", "Options for sudoku:\n");
+        printf("%s", "-f file: specify sudoku-file. This is not optional\n");
+        printf("%s", "-i run interactive\n");
+        printf("%s", "-h: this message\n");
+        break;
       default:
-	argc = 0;
-	break;
+        argc = 0;
+        break;
       }
     }
 
