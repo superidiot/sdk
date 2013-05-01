@@ -125,7 +125,7 @@ static void rem_n_at(struct s *sp, int i, int j)
 
 /* Set index (i,j) to number n.  Do all the easy removals in the
    corresponding row/col/squ, and set ns to 0 */
-static void set_n_at(struct s *sp, struct f **fp, int j, int n)
+static void set_n_at(struct s *sp, struct f **fp, int i, int j, int n)
 {
   if (interactive)
     {
@@ -134,7 +134,7 @@ static void set_n_at(struct s *sp, struct f **fp, int j, int n)
     }
   (*fp)[j].n = n;
   (*fp)[j].ns = 0;
-  rem_n_at(sp, j);
+  rem_n_at(sp, i, j);
   changed = true;
   if (interactive)
     {
@@ -144,20 +144,20 @@ static void set_n_at(struct s *sp, struct f **fp, int j, int n)
 
 /* Check each entry of the sudoku.  If it is non-zero, do all the
    according removals with set_n_at */
-/* static void init_ns(struct s *sp) */
-/* { */
-/*   int i, j; */
-/*   for (i = 0; i < 9; i++) */
-/*     { */
-/*       for (j = 0; j < 9; j++) */
-/*         { */
-/*           if (MATRIX_ROW_MAJOR_IDX(sp->normal, 9, i, j)->n != 0) */
-/*             { */
-/*               rem_n_at(sp, i, j); */
-/*             } */
-/*         } */
-/*     } */
-/* } */
+static void init_ns(struct s *sp)
+{
+  int i, j;
+  for (i = 0; i < 9; i++)
+    {
+      for (j = 0; j < 9; j++)
+        {
+          if (sp->normal[9 * j + i]->n != 0)
+            {
+              rem_n_at(sp, i, j);
+            }
+        }
+    }
+}
 
 /* If there is only one possibilty left for a number, set this
    number.  This means if popcount(ns) == 1, set the corresponding
