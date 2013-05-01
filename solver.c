@@ -67,7 +67,7 @@ static void load_row(struct f *fp, int k)
   desktop.index = k;
   for (i = 0; i < 9; i++)
     {
-      desktop.fields[i] = MATRIX_ROW_MAJOR_IDX(fp, 9, k, i);
+      desktop.fields[i] = &MATRIX_ROW_MAJOR_IDX(fp, 9, k, i);
     }
 }
 
