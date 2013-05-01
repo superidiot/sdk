@@ -117,32 +117,30 @@ static void rem_n_at(struct s *sp, int i, int j)
   load_row(sp->normal + 9*i);
   printf("%d\n", (sp->normal)[9*i + j]->n);
   rem_n_tmp((sp->normal)[9*i + j]->n);
-  /* load_row(MATRIX_ROW_MAJOR_IDX(sp->transposed, 9, j, 0), j); */
-  /* rem_n_tmp(MATRIX_ROW_MAJOR_IDX(sp->transposed, 9, j, i)->n); */
-  /* load_row(MATRIX_ROW_MAJOR_IDX(sp->transformed, 9, */
-  /* 				get_squ_number(i, j), 0), i); */
-  /* rem_n_tmp(MATRIX_ROW_MAJOR_IDX(sp->transformed, 9, */
-  /* 				 get_squ_number(i,j), j)->n); */
+  load_row(sp->transposed + 9 * i);
+  rem_n_tmp(sp->transposed[9 * i + j]->n);
+  load_row(sp->transformed + 9 * i);
+  rem_n_tmp(sp->transformed[9 * i +j]->n);
 }
 
 /* Set index (i,j) to number n.  Do all the easy removals in the
    corresponding row/col/squ, and set ns to 0 */
-/* static void set_n_at(struct f * fp, int j, int n) */
-/* { */
-/*   if (interactive) */
-/*     { */
-/*       printf("setting %d at (%d,%d)\n", n, i, j); */
-/*       getchar(); */
-/*     } */
-/*   MATRIX_ROW_MAJOR_IDX(fp, 9, i, j)->n = n; */
-/*   MATRIX_ROW_MAJOR_IDX(fp, 9, i, j)->ns = 0; */
-/*   rem_n_at(sp, i, j); */
-/*   changed = true; */
-/*   if (interactive) */
-/*     { */
-/*       printer_cli(sp); */
-/*     } */
-/* } */
+static void set_n_at(struct s *sp, struct f **fp, int j, int n)
+{
+  if (interactive)
+    {
+      /* printf("setting %d at (%d,%d)\n", n, i, j); */
+      getchar();
+    }
+  (*fp)[j].n = n;
+  (*fp)[j].ns = 0;
+  rem_n_at(sp, j);
+  changed = true;
+  if (interactive)
+    {
+      printer_cli(sp);
+    }
+}
 
 /* Check each entry of the sudoku.  If it is non-zero, do all the
    according removals with set_n_at */
@@ -428,7 +426,13 @@ int solver(struct s *sp, int inter)
   int i,j;
   /* load_row(sp->normal); */
   /* rem_n_tmp(sp->normal[0]->n); */
-  rem_n_at(sp, 0, 0);
+  for (i = 0; i < 9; i++)
+    {
+      for (j = 0; j < 9; j++)
+	{
+	  rem_n_at(sp, i, j);
+	}
+    }
   /* init_ns(sp); */
   /* do */
   /*   { */
