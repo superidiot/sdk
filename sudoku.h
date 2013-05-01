@@ -1,7 +1,8 @@
 /* http://en.wikipedia.org/wiki/Row-major_order */
-
-#define MATRIX_ROW_MAJOR_IDX(A, ncol, row, col) A[row * ncol + col] /* offset = row*NUMCOLS + column. */
-#define MATRIX_COL_MAJOR_IDX(A, nrow, row, col) A[row + col * nrow] /* offset = row + column*NUMROWS. */
+/* offset = row*NUMCOLS + column. */
+#define MATRIX_ROW_MAJOR_IDX(A, ncol, row, col) A[row * ncol + col]
+/* offset = row + column*NUMROWS. */
+#define MATRIX_COL_MAJOR_IDX(A, nrow, row, col) A[row + col * nrow]
 
 
 struct f {

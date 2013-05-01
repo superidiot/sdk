@@ -16,7 +16,7 @@ enum bool interactive = false;
 static struct desk
 {
   /* fields contains pointers to row, column or subsquare */
-  struct f *fields[9];
+  struct f **fields;
 
   /* index contains index of row, column or subsquare */
   int index;
@@ -60,23 +60,27 @@ static enum bool contains(int ns, int n)
    row can be worked on as if a normal array.  This is not so
    interesting in case of rows or cols, but more in the function
    load_squ below*/
-static void load_row(struct f *fp, int k)
+static void load_row(struct f **fp)
 {
   int i;
-  desktop.index = k;
+  printf("%s", "Loading fields containing: ");
   for (i = 0; i < 9; i++)
     {
-      desktop.fields[i] = &MATRIX_ROW_MAJOR_IDX(fp, 9, k, i);
+      printf("%d", (*(fp+i))->n);
     }
+  printf("%s", "\n");
+  desktop.fields = fp;
 }
 
 /* Removes number n from the row/col/squ that is currently loaded on
    the desk. */
-/* static void rem_n_tmp(int n)
+static void rem_n_tmp(int n)
 {
   int i;
+  printf("Remove %d from fields containing: ", n);
   for (i = 0; i < 9; i++)
     {
+      printf("%d,", desktop.fields[i]->n);
       if ( contains(desktop.fields[i]->ns, n) )
         {
           desktop.fields[i]->ns &= ~(1 << (n - 1));
@@ -86,31 +90,40 @@ static void load_row(struct f *fp, int k)
 }
 
 /* Convert the index (i,j) to a the corresponding number of a square */
-/* static int get_squ_number(int i, int j) */
-/* { */
-/*   int ret; */
-/*   if (i < 3 && j < 3) ret = 0; */
-/*   else if (i < 3 && j < 6) ret = 1; */
-/*   else if (i < 3) ret = 2; */
-/*   else if (i < 6 && j < 3) ret = 3; */
-/*   else if (i < 6 && j < 6) ret = 4; */
-/*   else if (i < 6) ret = 5; */
-/*   else if (j < 3) ret = 6; */
-/*   else if (j < 6) ret = 7; */
-/*   else ret = 8; */
-/*   return ret; */
-/* } */
+static int get_squ_number(int i, int j)
+{
+  int ret;
+  if (i < 3 && j < 3) ret = 0;
+  else if (i < 3 && j < 6) ret = 1;
+  else if (i < 3) ret = 2;
+  else if (i < 6 && j < 3) ret = 3;
+  else if (i < 6 && j < 6) ret = 4;
+  else if (i < 6) ret = 5;
+  else if (j < 3) ret = 6;
+  else if (j < 6) ret = 7;
+  else ret = 8;
+  return ret;
+}
 
 /* Removes n from ns from row/col/squ, that contain the index (i,j) */
-/* static void rem_n_at(struct s *sp, int i, int j) */
-/* { */
-/*   load_row(sp->normal[0],i); */
-/*   rem_n_tmp(MATRIX_ROW_MAJOR_IDX(sp->normal, 9, i, j)->n); */
-/*   load_row(sp->transposed[0],j); */
-/*   rem_n_tmp(MATRIX_ROW_MAJOR_IDX(sp->tansposed, 9, i,j)->n); */
-/*   load_row(sp->transformed[0], get_squ_number(i, j) ); */
-/*   rem_n_tmp(MATRIX_ROW_MAJOR_IDX(sp->transformed, 9, i, j)->n); */
-/* } */
+static void rem_n_at(struct s *sp, int i, int j)
+{
+  int k;
+  for (k = 0; k < 9; k++)
+    {
+      printf("%d", MATRIX_ROW_MAJOR_IDX(sp->normal,9,i,k)->n);
+      printf("%d\n", (sp->normal)[i*9 + j]->n);
+    }
+  load_row(sp->normal + 9*i);
+  printf("%d\n", (sp->normal)[9*i + j]->n);
+  rem_n_tmp((sp->normal)[9*i + j]->n);
+  /* load_row(MATRIX_ROW_MAJOR_IDX(sp->transposed, 9, j, 0), j); */
+  /* rem_n_tmp(MATRIX_ROW_MAJOR_IDX(sp->transposed, 9, j, i)->n); */
+  /* load_row(MATRIX_ROW_MAJOR_IDX(sp->transformed, 9, */
+  /* 				get_squ_number(i, j), 0), i); */
+  /* rem_n_tmp(MATRIX_ROW_MAJOR_IDX(sp->transformed, 9, */
+  /* 				 get_squ_number(i,j), j)->n); */
+}
 
 /* Set index (i,j) to number n.  Do all the easy removals in the
    corresponding row/col/squ, and set ns to 0 */
@@ -413,6 +426,9 @@ int solver(struct s *sp, int inter)
   changed = true;
   interactive = inter;
   int i,j;
+  /* load_row(sp->normal); */
+  /* rem_n_tmp(sp->normal[0]->n); */
+  rem_n_at(sp, 0, 0);
   /* init_ns(sp); */
   /* do */
   /*   { */
