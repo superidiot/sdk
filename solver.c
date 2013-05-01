@@ -71,39 +71,6 @@ static void load_row(struct f *fp, int k)
     }
 }
 
-/* Loads column k.  See the comment for load_row */
-/* static load_col(struct s *sp, int k) */
-/* { */
-/*   int i; */
-/*   desktop.type = 'c'; */
-/*   desktop.index = k; */
-/*   for (i = 0; i < 9; i++) */
-/*     { */
-/*       desktop.fields[i] = &(sp->normal[i][k]); */
-/*     } */
-/* } */
-
-/* Load square k to the desk.  The squares are numbered like this:
-   0 1 2
-   3 4 5
-   6 7 8  */
-/* static load_squ(struct s *sp, int k) */
-/* { */
-/*   int i,j,u,v,c; */
-/*   c = 0; */
-/*   i = 3 * (k / 3); */
-/*   j = 3 * (k % 3); */
-/*   desktop.type = 's'; */
-/*   desktop.index = k; */
-/*   for (u = 0; u < 3; u++) */
-/*     { */
-/*       for (v = 0; v < 3; v++) */
-/*         { */
-/*           desktop.fields[c++] = &(sp->normal[i + u][j + v]); */
-/*         } */
-/*     } */
-/* } */
-
 /* Removes number n from the row/col/squ that is currently loaded on
    the desk. */
 /* static void rem_n_tmp(int n)
