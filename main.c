@@ -46,7 +46,7 @@ main (int argc, char *argv[])
       struct s *sp;
       sp = reader(fp);
       fclose(fp);
-      /* printer_cli(sp); */
+      printer_cli(sp);
       /* printer_ps(sp, "sudoku.ps", 1, 11, "w"); */
       /* solved = solver(sp, interactive); */
       /* printer_cli(sp); */
