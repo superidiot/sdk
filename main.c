@@ -77,14 +77,14 @@ main (int argc, char *argv[])
           printf("%s", "\n");
         }
       printf("%s","=========\n");
-      /* for (i = 0; i < 9; i++) */
-      /*        { */
-      /*          for (j = 0; j < 9; j++) */
-      /*            { */
-      /*              printf("%d",MATRIX_ROW_MAJOR_IDX(sp->transforposed, 9, i, j)->n); */
-      /*            } */
-      /*          printf("%s", "\n"); */
-      /*        } */
+      for (i = 0; i < 9; i++)
+             {
+               for (j = 0; j < 9; j++)
+                 {
+                   printf("%d",MATRIX_ROW_MAJOR_IDX(sp->transforposed, 9, i, j)->n);
+                 }
+               printf("%s", "\n");
+             }
     }
   /* return solved; */
   return 0;
