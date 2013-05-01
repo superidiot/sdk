@@ -13,37 +13,8 @@ struct s* reader(FILE *fp)
           MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j) =
             (struct f *) malloc(sizeof(struct f));
 
-          /* MATRIX_COL_MAJOR_IDX(sudoku.transforposed, 9, i, j) =  */
-          /*   MATRIX_ROW_MAJOR_IDX(sudoku.transformed, 9, i, j); */
-
-          fscanf(fp, "%1d", &(MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->n));
-
-          if (MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->n == 0)
-            {
-              MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->ns =
-                ONE   |
-                TWO   |
-                THREE |
-                FOUR  |
-                FIVE  |
-                SIX   |
-                SEVEN |
-                EIGHT |
-                NINE;
-            }
-          else
-            {
-              MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->ns = 0;
-            }
-        }
-    }
-  for (i = 0; i < 9; i++)
-    {
-      for (j = 0; j < 9; j++)
-        {
-
-          MATRIX_COL_MAJOR_IDX(sudoku.transposed, 9, i, j) =
-            MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j);
+	  MATRIX_COL_MAJOR_IDX(sudoku.transposed, 9, i, j) =
+	    MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j);
 
           tmpi =  (j / 3);
           tmpj = (j % 3) + ((i%3) * 3);
@@ -67,6 +38,29 @@ struct s* reader(FILE *fp)
               printf("Transform3 (%d,%d)->(%d,%d)\n", i,j,tmpi,tmpj);
               MATRIX_ROW_MAJOR_IDX(sudoku.transformed, 9, tmpi, tmpj) =
                 MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j);
+            }
+
+          /* MATRIX_COL_MAJOR_IDX(sudoku.transforposed, 9, i, j) =  */
+          /*   MATRIX_ROW_MAJOR_IDX(sudoku.transformed, 9, i, j); */
+
+          fscanf(fp, "%1d", &(MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->n));
+
+          if (MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->n == 0)
+            {
+              MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->ns =
+                ONE   |
+                TWO   |
+                THREE |
+                FOUR  |
+                FIVE  |
+                SIX   |
+                SEVEN |
+                EIGHT |
+                NINE;
+            }
+          else
+            {
+              MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->ns = 0;
             }
         }
     }
