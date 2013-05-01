@@ -1,13 +1,19 @@
+/* http://en.wikipedia.org/wiki/Row-major_order */
+
+#define MATRIX_ROW_MAJOR_IDX(A, ncol, row, col) A[row * ncol + col] /* offset = row*NUMCOLS + column. */
+#define MATRIX_COL_MAJOR_IDX(A, nrow, row, col) A[row + col * nrow] /* offset = row + column*NUMROWS. */
+
+
 struct f {
   int n;
   int ns;
 };
 
 struct s {
-  struct f normal[9][9];
-  struct f transposed[9][9];
-  struct f transformed[9][9];
-  struct f transforposed[9][9];
+  struct f *normal[81];
+  struct f *transposed[81];
+  struct f *transformed[81];
+  struct f *transforposed[81];
 };
 
 struct s sudoku;
