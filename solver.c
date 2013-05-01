@@ -63,7 +63,6 @@ static enum bool contains(int ns, int n)
 static void load_row(struct f *fp, int k)
 {
   int i;
-  desktop.type = 'r';
   desktop.index = k;
   for (i = 0; i < 9; i++)
     {
