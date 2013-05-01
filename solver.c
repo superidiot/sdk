@@ -22,7 +22,7 @@ static struct desk
   int index;
 
   /* type contains 'r' for row, 'c' for column, 's' for subsquare */
-  char type;
+  /* char type; */
 } desktop;
 
 /* Determine the hamming-weight of number.  The hamming weight of a
@@ -51,58 +51,58 @@ static enum bool contains(int ns, int n)
 }
 
 /* Return a pointer to field normal[i][j] */
-static struct f *get_fp(struct s *sp, int i, int j)
-{
-  return &(sp->normal[i][j]);
-}
+/* static struct f *get_fp(struct s *sp, int i, int j) */
+/* { */
+/*   return &(sp->normal[i][j]); */
+/* } */
 
 /* loads the row k to the desktop.  So int the desktop-struct, the
    row can be worked on as if a normal array.  This is not so
    interesting in case of rows or cols, but more in the function
    load_squ below*/
-static void load_row(struct s *sp, int k)
+static void load_row(struct f *fp, int k)
 {
   int i;
   desktop.type = 'r';
   desktop.index = k;
   for (i = 0; i < 9; i++)
     {
-      desktop.fields[i] = &(sp->normal[k][i]);
+      desktop.fields[i] = MATRIX_ROW_MAJOR_IDX(fp, 9, k, i);
     }
 }
 
 /* Loads column k.  See the comment for load_row */
-static load_col(struct s *sp, int k)
-{
-  int i;
-  desktop.type = 'c';
-  desktop.index = k;
-  for (i = 0; i < 9; i++)
-    {
-      desktop.fields[i] = &(sp->normal[i][k]);
-    }
-}
+/* static load_col(struct s *sp, int k) */
+/* { */
+/*   int i; */
+/*   desktop.type = 'c'; */
+/*   desktop.index = k; */
+/*   for (i = 0; i < 9; i++) */
+/*     { */
+/*       desktop.fields[i] = &(sp->normal[i][k]); */
+/*     } */
+/* } */
 
 /* Load square k to the desk.  The squares are numbered like this:
    0 1 2
    3 4 5
    6 7 8  */
-static load_squ(struct s *sp, int k)
-{
-  int i,j,u,v,c;
-  c = 0;
-  i = 3 * (k / 3);
-  j = 3 * (k % 3);
-  desktop.type = 's';
-  desktop.index = k;
-  for (u = 0; u < 3; u++)
-    {
-      for (v = 0; v < 3; v++)
-        {
-          desktop.fields[c++] = &(sp->normal[i + u][j + v]);
-        }
-    }
-}
+/* static load_squ(struct s *sp, int k) */
+/* { */
+/*   int i,j,u,v,c; */
+/*   c = 0; */
+/*   i = 3 * (k / 3); */
+/*   j = 3 * (k % 3); */
+/*   desktop.type = 's'; */
+/*   desktop.index = k; */
+/*   for (u = 0; u < 3; u++) */
+/*     { */
+/*       for (v = 0; v < 3; v++) */
+/*         { */
+/*           desktop.fields[c++] = &(sp->normal[i + u][j + v]); */
+/*         } */
+/*     } */
+/* } */
 
 /* Removes number n from the row/col/squ that is currently loaded on
    the desk. */
@@ -138,25 +138,25 @@ static int get_squ_number(int i, int j)
 /* Removes n from ns from row/col/squ, that contain the index (i,j) */
 static void rem_n_at(struct s *sp, int i, int j)
 {
-  load_row(sp,i);
-  rem_n_tmp(sp->normal[i][j].n);
-  load_col(sp,j);
-  rem_n_tmp(sp->normal[i][j].n);
-  load_squ(sp, get_squ_number(i, j) );
-  rem_n_tmp(sp->normal[i][j].n);
+  load_row(sp->normal[0],i);
+  rem_n_tmp(MATRIX_ROW_MAJOR_IDX(sp->normal, 9, i, j)->n);
+  load_row(sp->transposed[0],j);
+  rem_n_tmp(MATRIX_ROW_MAJOR_IDX(sp->tansposed, 9, i,j)->n);
+  load_row(sp->transformed[0], get_squ_number(i, j) );
+  rem_n_tmp(MATRIX_ROW_MAJOR_IDX(sp->transformed, 9, i, j)->n);
 }
 
 /* Set index (i,j) to number n.  Do all the easy removals in the
    corresponding row/col/squ, and set ns to 0 */
-static void set_n_at(struct s *sp, int i, int j, int n)
+static void set_n_at(struct f * fp, int j, int n)
 {
   if (interactive)
     {
       printf("setting %d at (%d,%d)\n", n, i, j);
       getchar();
     }
-  sp->normal[i][j].n = n;
-  sp->normal[i][j].ns = 0;
+  MATRIX_ROW_MAJOR_IDX(fp, 9, i, j)->n = n;
+  MATRIX_ROW_MAJOR_IDX(fp, 9, i, j)->ns = 0;
   rem_n_at(sp, i, j);
   changed = true;
   if (interactive)
@@ -174,7 +174,7 @@ static void init_ns(struct s *sp)
     {
       for (j = 0; j < 9; j++)
         {
-          if (sp->normal[i][j].n != 0)
+          if (MATRIX_ROW_MAJOR_IDX(sp->normal, 9, i, j)->n != 0)
             {
               rem_n_at(sp, i, j);
             }
@@ -185,14 +185,14 @@ static void init_ns(struct s *sp)
 /* If there is only one possibilty left for a number, set this
    number.  This means if popcount(ns) == 1, set the corresponding
    number. */
-static void set_single(struct s *sp, int i, int j)
+static void set_single(struct f *fp, int i)
 {
   int k,tmp;
   for (k = 0; k < 9; k++)
     {
-      if ((1 << k) == sp->normal[i][j].ns)
+      if ((1 << k) == MATRIX_ROW_MAJOR_IDX(fp, 9, i, j)->ns)
         {
-          set_n_at(sp, i, j, (k + 1));
+          set_n_at(MATRIX_ROW_MAJOR_IDX(fp, 9, i, j), k + 1);
         }
     }
 }
@@ -206,9 +206,9 @@ static void set_singles(struct s *sp)
     {
       for (j = 0; j < 9; j++)
         {
-          if (popcount(sp->normal[i][j].ns) == 1)
+          if (popcount(MATRIX_ROW_MAJOR_IDX(sp->normal, 9, i, j)->ns) == 1)
             {
-              set_single(sp,i,j);
+              set_single(sp, i, j);
             }
         }
     }
@@ -223,25 +223,26 @@ static void set_uniq_tmp(struct s *sp, int n)
     {
       if ( contains(desktop.fields[i]->ns, n) )
         {
-          switch (desktop.type)
-            {
-            case 'r':
-              /* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, desktop.index, i, desktop.type, desktop.index); */
-              set_n_at(sp, desktop.index, i, n);
-              break;
-            case 'c':
-              /* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, i, desktop.index, desktop.type, desktop.index); */
-              set_n_at(sp, i, desktop.index, n);
-              break;
-            case 's':
-              x = 3 * (desktop.index / 3);
-              y = 3 * (desktop.index % 3);
-              u = i / 3;
-              v = i % 3;
-              /* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, x + u, y + v,desktop.type, desktop.index); */
-              set_n_at(sp, x + u, y + v, n);
-              break;
-            }
+	  set_n_at(sp,);
+          /* switch (desktop.type) */
+          /*   { */
+          /*   case 'r': */
+          /*     /\* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, desktop.index, i, desktop.type, desktop.index); *\/ */
+          /*     set_n_at(sp, desktop.index, i, n); */
+          /*     break; */
+          /*   case 'c': */
+          /*     /\* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, i, desktop.index, desktop.type, desktop.index); *\/ */
+          /*     set_n_at(sp, i, desktop.index, n); */
+          /*     break; */
+          /*   case 's': */
+          /*     x = 3 * (desktop.index / 3); */
+          /*     y = 3 * (desktop.index % 3); */
+          /*     u = i / 3; */
+          /*     v = i % 3; */
+          /*     /\* printf("set_uniq_tmp: found %d at (%d,%d) processing [%c %d]\n", n, x + u, y + v,desktop.type, desktop.index); *\/ */
+          /*     set_n_at(sp, x + u, y + v, n); */
+          /*     break; */
+          /*   } */
         }
     }
 }
