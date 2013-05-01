@@ -40,9 +40,6 @@ struct s* reader(FILE *fp)
                 MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j);
             }
 
-          MATRIX_COL_MAJOR_IDX(sudoku.transforposed, 9, i, j) =
-            MATRIX_ROW_MAJOR_IDX(sudoku.transformed, 9, i, j);
-
           fscanf(fp, "%1d", &(MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->n));
 
           if (MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->n == 0)
@@ -63,6 +60,13 @@ struct s* reader(FILE *fp)
               MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->ns = 0;
             }
         }
+    }
+  for (i = 0; i < 9; i++)
+    {
+      for (j = 0; j < 9; j++){
+	MATRIX_COL_MAJOR_IDX(sudoku.transforposed, 9, i, j) =
+	  MATRIX_ROW_MAJOR_IDX(sudoku.transformed, 9, i, j);
+      }
     }
   return &sudoku;
 }
