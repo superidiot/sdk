@@ -318,8 +318,8 @@ static int fields_ns_contain(int n)
    +-----------+
    |7_3|x9x|4_8|  Counting from 0, we look at the first square.  3
    |4__|8x7|___|  cannot go where I put x.  So it has to go to the
-   |98_|_4_|__7|  bottom, left and right to 4.  This means, that we
-   +-----------+  can eliminate 3 from square 2 in the bottom line.
+   |98_|_4_|__7|  bottom, left or right to 4.  This means, that we
+   +-----------+  can eliminate 3 from the bottom line in square 2.
    |14_|___|_6_|
    |3_8|___|7_2|  We will plug each triple we have into and.  If the
    |67_|___|_1_|  result is greater than 0, we plug the result into
