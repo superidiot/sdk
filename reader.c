@@ -41,8 +41,6 @@ struct s* reader(FILE *fp)
 	  MATRIX_COL_MAJOR_IDX(sudoku.transposed, 9, i, j) =
 	    MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j);
 
-          tmpi =  (j / 3);
-          tmpj = (j % 3) + ((i%3) * 3);
           if (i % 3 == j/3){
             /* printf("Transform1 (%d,%d)->(%d,%d)\n", i,j,i,j); */
             MATRIX_ROW_MAJOR_IDX(sudoku.transformed, 9, i, j) =
