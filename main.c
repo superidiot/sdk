@@ -48,45 +48,44 @@ main (int argc, char *argv[])
       fclose(fp);
       printer_cli(sp);
       /* printer_ps(sp, "sudoku.ps", 1, 11, "w"); */
-      /* solved = solver(sp, interactive); */
+      solved = solver(sp, interactive);
       /* printer_cli(sp); */
-      for (i = 0; i < 9; i++)
-        {
-          for (j = 0; j < 9; j++)
-            {
-              printf("%d",MATRIX_ROW_MAJOR_IDX(sp->normal, 9, i, j)->n);
-            }
-          printf("%s", "\n");
-        }
-      printf("%s","=========\n");
-      for (i = 0; i < 9; i++)
-        {
-          for (j = 0; j < 9; j++)
-            {
-              printf("%d",MATRIX_ROW_MAJOR_IDX(sp->transposed, 9, i, j)->n);
-            }
-          printf("%s", "\n");
-        }
-      printf("%s","=========\n");
-      for (i = 0; i < 9; i++)
-        {
-          for (j = 0; j < 9; j++)
-            {
-              printf("%d",MATRIX_ROW_MAJOR_IDX(sp->transformed, 9, i, j)->n);
-            }
-          printf("%s", "\n");
-        }
-      printf("%s","=========\n");
-      for (i = 0; i < 9; i++)
-             {
-               for (j = 0; j < 9; j++)
-                 {
-                   printf("%d",MATRIX_ROW_MAJOR_IDX(sp->transforposed, 9, i, j)->n);
-                 }
-               printf("%s", "\n");
-             }
+    /*   for (i = 0; i < 9; i++) */
+    /*     { */
+    /*       for (j = 0; j < 9; j++) */
+    /*         { */
+    /*           printf("%d",MATRIX_ROW_MAJOR_IDX(sp->normal, 9, i, j)->n); */
+    /*         } */
+    /*       printf("%s", "\n"); */
+    /*     } */
+    /*   printf("%s","=========\n"); */
+    /*   for (i = 0; i < 9; i++) */
+    /*     { */
+    /*       for (j = 0; j < 9; j++) */
+    /*         { */
+    /*           printf("%d",MATRIX_ROW_MAJOR_IDX(sp->transposed, 9, i, j)->n); */
+    /*         } */
+    /*       printf("%s", "\n"); */
+    /*     } */
+    /*   printf("%s","=========\n"); */
+    /*   for (i = 0; i < 9; i++) */
+    /*     { */
+    /*       for (j = 0; j < 9; j++) */
+    /*         { */
+    /*           printf("%d",MATRIX_ROW_MAJOR_IDX(sp->transformed, 9, i, j)->n); */
+    /*         } */
+    /*       printf("%s", "\n"); */
+    /*     } */
+    /*   printf("%s","=========\n"); */
+    /*   for (i = 0; i < 9; i++) */
+    /*          { */
+    /*            for (j = 0; j < 9; j++) */
+    /*              { */
+    /*                printf("%d",MATRIX_ROW_MAJOR_IDX(sp->transforposed, 9, i, j)->n); */
+    /*              } */
+    /*            printf("%s", "\n"); */
+    /*          } */
     }
-  /* return solved; */
-  return 0;
+  return solved;
 }
 
