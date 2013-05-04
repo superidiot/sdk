@@ -234,6 +234,22 @@ static void set_uniqs(struct s *sp)
     }
 }
 
+/* Convert the index (i,j) to a the corresponding number of a square */
+static int get_squ_number(int i, int j)
+{
+  int ret;
+  if (i < 3 && j < 3) ret = 0;
+  else if (i < 3 && j < 6) ret = 1;
+  else if (i < 3) ret = 2;
+  else if (i < 6 && j < 3) ret = 3;
+  else if (i < 6 && j < 6) ret = 4;
+  else if (i < 6) ret = 5;
+  else if (j < 3) ret = 6;
+  else if (j < 6) ret = 7;
+  else ret = 8;
+  return ret;
+}
+
 /* I call this function find_shadows.  I have no better idea.  Since
    the name is rather bad, I better explain what I want it to do:
    Assume you have the following sudoku:
@@ -270,7 +286,7 @@ static void find_shadows(struct s *sp)
           rest = 0;
           /* printf("found candidates %d at tripel %d\n", candidates, tripel); */
           /* load_squ(sp, get_squ_number(row,tripel)); */
-	  load_row(sp->transformed + 9 * row);
+	  load_row(sp->transformed + 9 * get_squ_number(row,tripel));
           for (i = 0; i < 6; i++)
             {
               if (row % 3 == 0){
