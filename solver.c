@@ -263,13 +263,14 @@ static void find_shadows(struct s *sp)
     {
       for (tripel = 0; tripel < 9; tripel += 3)
         {
-          load_row(sp, row);
+          load_row(sp->normal + 9 * row);
           candidates = (desktop.fields[tripel]->ns |
                         desktop.fields[tripel + 1]->ns |
                         desktop.fields[tripel + 2]->ns);
           rest = 0;
           /* printf("found candidates %d at tripel %d\n", candidates, tripel); */
-          load_squ(sp, get_squ_number(row,tripel));
+          /* load_squ(sp, get_squ_number(row,tripel)); */
+	  load_row(sp->transformed + 9 * row);
           for (i = 0; i < 6; i++)
             {
               if (row % 3 == 0){
@@ -284,7 +285,7 @@ static void find_shadows(struct s *sp)
                 }
             }
           candidates = (511 ^ rest) & candidates;
-          load_row(sp,row);
+          load_row(sp->normal + 9 * row);
           for (i = 0; i < 6; i++)
             {
               if (tripel / 3 == 0)
@@ -383,6 +384,7 @@ int solver(struct s *sp, int inter)
       clean_ns(sp);
       set_singles(sp);
       set_uniqs(sp);
+      find_shadows(sp);
       /*     set_singles(sp); */
       /*     set_uniqs(sp); */
       /*     find_shadows(sp); */
