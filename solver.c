@@ -101,6 +101,21 @@ static void rem_n_at(struct s *sp, int i, int j)
   rem_n_tmp(sp->transposed[9 * i + j]->n);
   load_row(sp->transformed + 9 * i);
   rem_n_tmp(sp->transformed[9 * i +j]->n);
+/* Check each entry of the sudoku.  If it is non-zero, do all the
+   according removals with set_n_at */
+static void clean_ns(struct s *sp)
+{
+  int i, j;
+  for (i = 0; i < 9; i++)
+    {
+      for (j = 0; j < 9; j++)
+        {
+          if (sp->normal[9 * i + j]->n != 0)
+            {
+              rem_n_at(sp, i, j);
+            }
+        }
+    }
 }
 
 /* Set index (i,j) to number n.  Do all the easy removals in the
@@ -122,23 +137,6 @@ static void set_n_at(struct s *sp, struct f *fp, int n)
   if (interactive)
     {
       printer_cli(sp);
-    }
-}
-
-/* Check each entry of the sudoku.  If it is non-zero, do all the
-   according removals with set_n_at */
-static void clean_ns(struct s *sp)
-{
-  int i, j;
-  for (i = 0; i < 9; i++)
-    {
-      for (j = 0; j < 9; j++)
-        {
-          if (sp->normal[9 * j + i]->n != 0)
-            {
-              rem_n_at(sp, i, j);
-            }
-        }
     }
 }
 
