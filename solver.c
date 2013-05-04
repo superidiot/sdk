@@ -64,6 +64,7 @@ static void load_row(struct f **fp)
 static void rem_n_tmp(int n)
 {
   int i;
+  /* printf("remove %d from row/col/squ ", n); */
   for (i = 0; i < 9; i++)
     {
       if ( contains(desktop.fields[i]->ns, n) )
@@ -125,10 +126,10 @@ static void set_n_at(struct s *sp, struct f *fp, int n)
   /* printf("%s\n", "set_n_at"); */
   if (interactive)
     {
-      /* printf("setting %d at (%d,%d)\n", n, i, j); */
+      /* printf("setting %d for field [%d]%d)\n", n, fp->n, fp->ns); */
       getchar();
     }
-  if ((*fp).n !=n){
+  if ((*fp).n != n){
     (*fp).n = n;
     (*fp).ns = 0;
     changed = true;
@@ -145,13 +146,14 @@ static void set_n_at(struct s *sp, struct f *fp, int n)
    number. */
 static void set_single(struct s *sp, struct f *fp)
 {
-  /* printf("%s\n", "set_single"); */
+  /* printf("%s(%d)[%d]\n", "set_single for field containing", fp->n, fp->ns); */
   int k;
   for (k = 0; k < 9; k++)
     {
       if ((1 << k) == fp->ns)
         {
-          set_n_at(sp, fp, k);
+	  /* printf("%s%d\n", "found: ", k + 1); */
+          set_n_at(sp, fp, k + 1);
         }
     }
 }
@@ -220,7 +222,6 @@ static void find_uniq_tmp(struct s *sp)
         }
       if (c == 1)
         {
-          /* printf("found uniq %d\n", n + 1); */
           set_uniq_tmp(sp, n + 1);
         }
     }
@@ -261,6 +262,7 @@ static void set_uniqs(struct s *sp)
 */
 static void find_shadows(struct s *sp)
 {
+  /* printf("%s", "find_shadows"); */
   int tripel; /* specify at which tripel you are working */
   int candidates; /* holds all the numbers that can go into the
                      current tripel */
@@ -276,8 +278,6 @@ static void find_shadows(struct s *sp)
                         desktop.fields[tripel + 1]->ns |
                         desktop.fields[tripel + 2]->ns);
           rest = 0;
-          /* printf("found candidates %d at tripel %d\n", candidates, tripel); */
-          /* load_squ(sp, get_squ_number(row,tripel)); */
 	  load_row(sp->transformed + 9 * get_squ_number(row,tripel));
           for (i = 0; i < 6; i++)
             {
@@ -336,10 +336,6 @@ static void find_shadows(struct s *sp)
                     }
                 }
             }
-
-          /* printf("found rest %d at tripel %d\n", rest , tripel); */
-          /* printf("found reals %d in row %d at tripel %d\n", */
-          /*     (511 ^ rest) & candidates , row,tripel); */
         }
     }
 
@@ -376,26 +372,12 @@ int solver(struct s *sp, int inter)
 {
   changed = true;
   interactive = inter;
-  int i,j;
-  /* load_row(sp->normal); */
-  /* rem_n_tmp(sp->normal[0]->n); */
-  /* for (i = 0; i < 9; i++) */
-  /*   { */
-  /*     for (j = 0; j < 9; j++) */
-  /* 	{ */
-  /* 	  rem_n_at(sp, i, j); */
-  /* 	} */
-  /*   } */
-  /* init_ns(sp); */
   do
     {
       clean_ns(sp);
       set_singles(sp);
       set_uniqs(sp);
       find_shadows(sp);
-      /*     set_singles(sp); */
-      /*     set_uniqs(sp); */
-      /*     find_shadows(sp); */
     }
   while (changed == true);
   return test(sp);
