@@ -95,13 +95,15 @@ static int get_squ_number(int i, int j)
 /* Removes set numbers at columns, rows and squares */
 static void rem_n_at(struct s *sp, int i, int j)
 {
-  int k;
-  load_row(sp->normal + 9*i);
-  rem_n_tmp((sp->normal)[9 * i + j]->n);
-  load_row(sp->transposed + 9 * i);
-  rem_n_tmp(sp->transposed[9 * i + j]->n);
-  load_row(sp->transformed + 9 * i);
-  rem_n_tmp(sp->transformed[9 * i +j]->n);
+  int k,l;
+  load_row(sp->normal + 9 * i);
+  rem_n_tmp(sp->normal[9 * i + j]->n);
+  load_row(sp->transposed + 9 * j);
+  rem_n_tmp(sp->normal[9 * i + j]->n);
+  load_row(sp->transformed + 9 * get_squ_number(i,j));
+  rem_n_tmp(sp->normal[9 * i + j ]->n);
+}
+
 /* Check each entry of the sudoku.  If it is non-zero, do all the
    according removals with set_n_at */
 static void clean_ns(struct s *sp)
