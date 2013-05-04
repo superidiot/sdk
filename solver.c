@@ -134,6 +134,7 @@ static void set_n_at(struct s *sp, struct f *fp, int n)
   if ((*fp).n != n){
     (*fp).n = n;
     (*fp).ns = 0;
+    clean_ns(sp);
     changed = true;
   }
   else changed = false;
