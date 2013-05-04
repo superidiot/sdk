@@ -50,12 +50,6 @@ static enum bool contains(int ns, int n)
   return ( (ns & (1 << (n - 1))) > 0 ? true : false);
 }
 
-/* Return a pointer to field normal[i][j] */
-/* static struct f *get_fp(struct s *sp, int i, int j) */
-/* { */
-/*   return &(sp->normal[i][j]); */
-/* } */
-
 /* loads the row k to the desktop.  So int the desktop-struct, the
    row can be worked on as if a normal array.  This is not so
    interesting in case of rows or cols, but more in the function
