@@ -50,7 +50,7 @@ struct s* reader(FILE *fp)
           } else if (i % 3 < j / 3)
             {
               {
-                tmpi = (j / 3) + (i / 3)*3;
+                tmpi = (j / 3) + (i / 3) * 3;
                 tmpj = j % 3 + (i % 3) * 3;
                 /* printf("Transform2 (%d,%d)->(%d,%d)\n", i,j,tmpi,tmpj); */
                 MATRIX_ROW_MAJOR_IDX(sudoku.transformed, 9, tmpi, tmpj) =
@@ -60,7 +60,7 @@ struct s* reader(FILE *fp)
               }
             } else
             {
-              tmpi = (j / 3) + (i / 3)*3;
+              tmpi = (j / 3) + (i / 3) * 3;
               tmpj = (i % 3) * 3 + j % 3;
               /* printf("Transform3 (%d,%d)->(%d,%d)\n", i,j,tmpi,tmpj); */
               MATRIX_ROW_MAJOR_IDX(sudoku.transformed, 9, tmpi, tmpj) =

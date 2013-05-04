@@ -348,7 +348,6 @@ static void find_shadows(struct s *sp)
     }
 }
 
-
 /* test sum and product of rows */
 static int test(struct s *sp)
 {
