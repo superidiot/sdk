@@ -75,6 +75,22 @@ static void rem_n_tmp(int n)
     }
 }
 
+/* Convert the index (i,j) to a the corresponding number of a square */
+static int get_squ_number(int i, int j)
+{
+  int ret;
+  if (i < 3 && j < 3) ret = 0;
+  else if (i < 3 && j < 6) ret = 1;
+  else if (i < 3) ret = 2;
+  else if (i < 6 && j < 3) ret = 3;
+  else if (i < 6 && j < 6) ret = 4;
+  else if (i < 6) ret = 5;
+  else if (j < 3) ret = 6;
+  else if (j < 6) ret = 7;
+  else ret = 8;
+  return ret;
+}
+
 /* Removes set numbers at columns, rows and squares */
 static void rem_n_at(struct s *sp, int i, int j)
 {
@@ -226,22 +242,6 @@ static void set_uniqs(struct s *sp)
       load_row(sp->transformed + 9 * k);
       find_uniq_tmp(sp);
     }
-}
-
-/* Convert the index (i,j) to a the corresponding number of a square */
-static int get_squ_number(int i, int j)
-{
-  int ret;
-  if (i < 3 && j < 3) ret = 0;
-  else if (i < 3 && j < 6) ret = 1;
-  else if (i < 3) ret = 2;
-  else if (i < 6 && j < 3) ret = 3;
-  else if (i < 6 && j < 6) ret = 4;
-  else if (i < 6) ret = 5;
-  else if (j < 3) ret = 6;
-  else if (j < 6) ret = 7;
-  else ret = 8;
-  return ret;
 }
 
 /* I call this function find_shadows.  I have no better idea.  Since
