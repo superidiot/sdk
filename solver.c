@@ -97,7 +97,7 @@ static void rem_n_at(struct s *sp, int i, int j)
    corresponding row/col/squ, and set ns to 0 */
 static void set_n_at(struct s *sp, struct f *fp, int n)
 {
-  printf("%s\n", "set_n_at");
+  /* printf("%s\n", "set_n_at"); */
   if (interactive)
     {
       /* printf("setting %d at (%d,%d)\n", n, i, j); */
@@ -137,7 +137,7 @@ static void clean_ns(struct s *sp)
    number. */
 static void set_single(struct s *sp, struct f *fp)
 {
-  printf("%s\n", "set_single");
+  /* printf("%s\n", "set_single"); */
   int k;
   for (k = 0; k < 9; k++)
     {
@@ -152,7 +152,7 @@ static void set_single(struct s *sp, struct f *fp)
    those fields. */
 static void set_singles(struct s *sp)
 {
-  printf("%s\n", "set_singles");
+  /* printf("%s\n", "set_singles"); */
   int i,j;
   for (i = 0; i < 9; i++)
     {
@@ -169,7 +169,7 @@ static void set_singles(struct s *sp)
 /* Assume that find_uniq_tmp below found a number.  Set this number. */
 static void set_uniq_tmp(struct s *sp, int n)
 {
-  printf("%s\n", "set_uniq_tmp");
+  /* printf("%s\n", "set_uniq_tmp"); */
   int i;
   for (i = 0; i < 9; i++)
     {
@@ -198,7 +198,7 @@ static void set_uniq_tmp(struct s *sp, int n)
    +~~~~~~~~~~~~ */
 static void find_uniq_tmp(struct s *sp)
 {
-  printf("%s\n", "find_uniq_tmp");
+  /* printf("%s\n", "find_uniq_tmp"); */
   int i,n,c;
   for (n = 0; n < 9; n++)
     {
@@ -221,7 +221,7 @@ static void find_uniq_tmp(struct s *sp)
 /* Find uniqs in rows/col/squs.  Set them. */
 static void set_uniqs(struct s *sp)
 {
-  printf("%s\n", "set_uniqs");
+  /* printf("%s\n", "set_uniqs"); */
   int k;
   for (k = 0; k < 9; k++)
     {
