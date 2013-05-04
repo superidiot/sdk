@@ -352,7 +352,7 @@ static void find_shadows(struct s *sp)
 /* test sum and product of rows */
 static int test(struct s *sp)
 {
-  int i,j,p,s,ret,c;
+  int i,j,p,s,c;
   c = 0;
   for (i = 0; i < 9; i++)
     {
@@ -360,8 +360,8 @@ static int test(struct s *sp)
       p = 1;
       for (j = 0; j < 9; j++)
         {
-          s += sp->normal[i][j].n;
-          p *= sp->normal[i][j].n;
+          s += sp->normal[9 * i + j]->n;
+          p *= sp->normal[9 * i + j]->n;
         }
       if (p == 362880 && s == 45)
         {
