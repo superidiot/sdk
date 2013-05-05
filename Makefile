@@ -1,3 +1,4 @@
+CFLAGS=-Wall -g
 objects = main.o printer.o reader.o solver.o
 
 sudoku : $(objects)
