@@ -11,5 +11,5 @@ solver.o : solver.c sudoku.h
 
 .PHONY : clean
 clean : 
-	rm sudoku sudoku.ps $(objects)
+	rm sudoku $(objects)
 all: sudoku
