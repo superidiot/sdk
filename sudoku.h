@@ -8,6 +8,8 @@
 struct f {
   int n;
   int ns;
+  int row_i;
+  int col_j;
 };
 
 struct s {

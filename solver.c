@@ -126,19 +126,19 @@ static int get_squ_number(int i, int j)
 }
 
 /* Removes set numbers at columns, rows and squares */
-static void rem_n_at(struct s *sp, int i, int j)
+static void rem_n_at(struct s *sp, struct f *fp)
 {
-  load_row(sp->normal + 9 * i);
-  rem_n_tmp(sp->normal[9 * i + j]->n);
-  load_row(sp->transposed + 9 * j);
-  rem_n_tmp(sp->normal[9 * i + j]->n);
-  load_row(sp->transformed + 9 * get_squ_number(i,j));
-  rem_n_tmp(sp->normal[9 * i + j ]->n);
+  load_row(sp->normal + 9 * fp->row_i);
+  rem_n_tmp(fp->n);
+  load_row(sp->transposed + 9 * fp->col_j);
+  rem_n_tmp(fp->n);
+  load_row(sp->transformed + 9 * get_squ_number(fp->row_i, fp->col_j));
+  rem_n_tmp(fp->n);
 }
 
 /* Check each entry of the sudoku.  If it is non-zero, do all the
    according removals with set_n_at */
-static void clean_ns(struct s *sp)
+static void init_ns(struct s *sp)
 {
   int i, j;
   for (i = 0; i < 9; i++)
@@ -147,7 +147,7 @@ static void clean_ns(struct s *sp)
         {
           if (sp->normal[9 * i + j]->n != 0)
             {
-              rem_n_at(sp, i, j);
+              rem_n_at(sp, sp->normal[9 * i + j]);
             }
         }
     }
@@ -166,7 +166,7 @@ static void set_n_at(struct s *sp, struct f *fp, int n)
   if ((*fp).n != n){
     (*fp).n = n;
     (*fp).ns = 0;
-    clean_ns(sp);
+    rem_n_at(sp, fp);
     changed = true;
   }
   else changed = false;
@@ -408,7 +408,7 @@ int solver(struct s *sp, int inter)
   interactive = inter;
   do
     {
-      clean_ns(sp);
+      init_ns(sp);
       set_singles(sp);
       set_uniqs(sp);
       find_shadows(sp);

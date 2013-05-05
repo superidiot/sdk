@@ -14,7 +14,9 @@ struct s* reader(FILE *fp)
             (struct f *) malloc(sizeof(struct f));
 
           fscanf(fp, "%1d", &(MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->n));
-
+	  MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->row_i = i;
+	  MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->col_j = j;
+	  
           if (MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->n == 0)
             {
               MATRIX_ROW_MAJOR_IDX(sudoku.normal, 9, i, j)->ns =
