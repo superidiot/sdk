@@ -60,11 +60,44 @@ static void load_row(struct f **fp)
   desktop.fields = fp;
 }
 
+void reverse(char *s)
+{
+  int c, i, j;
+  for (i = 0, j = strlen(s) - 1; i < j; i++, j--)
+    {
+      c = s[i];
+      s[i] = s[j];
+      s[j] = c;
+    }
+}
+
+void itoa(int n, char *s)
+{
+  int i, sign;
+  if ((sign = n) < 0)
+    n = -n;
+  i = 0;
+  do {
+    s[i++] = n % 10 + '0';
+  } while ((n /= 10) > 0);
+  if (sign < 0)
+    s[i++] = '-';
+  s[i] = '\0';
+  reverse(s);
+}
+
 /* Removes number n from the row that is currently loaded. */
 static void rem_n_tmp(int n)
 {
   int i;
-  /* printf("remove %d from row/col/squ ", n); */
+  char row[9];
+  for (i = 0; i < 9; i++)
+    {
+      itoa(desktop.fields[i]->n, row + i);
+    }
+
+  debug("remove %d from row %s", n, row);
+
   for (i = 0; i < 9; i++)
     {
       if ( contains(desktop.fields[i]->ns, n) )
