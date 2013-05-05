@@ -57,7 +57,6 @@ static enum bool contains(int ns, int n)
    load_squ below*/
 static void load_row(struct f **fp)
 {
-  int i;
   desktop.fields = fp;
 }
 
@@ -96,7 +95,6 @@ static int get_squ_number(int i, int j)
 /* Removes set numbers at columns, rows and squares */
 static void rem_n_at(struct s *sp, int i, int j)
 {
-  int k,l;
   load_row(sp->normal + 9 * i);
   rem_n_tmp(sp->normal[9 * i + j]->n);
   load_row(sp->transposed + 9 * j);
@@ -383,5 +381,6 @@ int solver(struct s *sp, int inter)
       find_shadows(sp);
     }
   while (changed == true);
+
   return test(sp);
 }

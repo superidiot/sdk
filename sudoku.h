@@ -33,4 +33,4 @@ struct s *reader(FILE *fd);
 
 void printer_cli (struct s *sp);
 
-/* int solver (struct s *sp, int interactive); */
+int solver (struct s *sp, int interactive);

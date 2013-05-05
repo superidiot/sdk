@@ -51,7 +51,6 @@ void printer_cli (struct s *sp)
     {
       for (j = 0; j < 9; j++)
 	{
-	  int k;
 	  int tmp;
 	  tmp = MATRIX_ROW_MAJOR_IDX(sp->normal, 9, i, j)->ns;
 	  if (tmp == 0)

@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include "sudoku.h"
 
-main (int argc, char *argv[])
+int main (int argc, char *argv[])
 {
-  int k, i, c, interactive, solved;
+  int i, c, interactive, solved;
   solved = -1;
   c = 0;
   char file[90];
@@ -41,7 +41,7 @@ main (int argc, char *argv[])
     }
   else
     {
-      int i,j;
+      /* int i,j; */
       FILE *fp = fopen(file,"r");
       struct s *sp;
       sp = reader(fp);
