@@ -7,6 +7,7 @@ int main (int argc, char *argv[])
   int i, c, interactive, solved;
   solved = -1;
   c = 0;
+  interactive = 0;
   char file[90];
   file[0] = 0;
   while ( --argc > 0  && (*++argv)[0] == '-' )
