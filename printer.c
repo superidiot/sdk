@@ -4,17 +4,20 @@
 static void print_bin(int ns)
 {
   int bin = 256;
+  int c = 9;
   while (bin > 0)
     {
       if ((ns & bin) == bin)
 	{
-	  printf("%d", 1);
+	  printf("%d", c);
 	  ns &= (~bin);
 	  bin >>= 1;
+	  c--;
 	}
       else {
-	printf("%d",0);
+	printf("%s", "_");
 	bin >>= 1;
+	c--;
       }
     }
 }
