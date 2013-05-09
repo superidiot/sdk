@@ -139,6 +139,7 @@ static void rem_n_at(struct s *sp, struct f *fp)
    according removals with set_n_at */
 static void init_ns(struct s *sp)
 {
+  debug("Initializing ns");
   int i, j;
   for (i = 0; i < 9; i++)
     {
@@ -156,7 +157,7 @@ static void init_ns(struct s *sp)
    corresponding row/col/squ, and set ns to 0 */
 static void set_n_at(struct s *sp, struct f *fp, int n)
 {
-  /* printf("%s\n", "set_n_at"); */
+  debug("Set %d at (%d,%d)", n, fp->row_i, fp->col_j);
   if (interactive)
     {
       /* printf("setting %d for field [%d]%d)\n", n, fp->n, fp->ns); */
@@ -179,13 +180,12 @@ static void set_n_at(struct s *sp, struct f *fp, int n)
    number. */
 static void set_single(struct s *sp, struct f *fp)
 {
-  /* printf("%s(%d)[%d]\n", "set_single for field containing", fp->n, fp->ns); */
+  debug("%s(%d)[%d]\n", "set_single for field containing", fp->n, fp->ns);
   int k;
   for (k = 0; k < 9; k++)
     {
       if ((1 << k) == fp->ns)
         {
-	  /* printf("%s%d\n", "found: ", k + 1); */
           set_n_at(sp, fp, k + 1);
         }
     }
@@ -195,7 +195,7 @@ static void set_single(struct s *sp, struct f *fp)
    those fields. */
 static void set_singles(struct s *sp)
 {
-  /* printf("%s\n", "set_singles"); */
+  debug("%s", "Set all singles");
   int i,j;
   for (i = 0; i < 9; i++)
     {
@@ -207,6 +207,7 @@ static void set_singles(struct s *sp)
 	    }
         }
     }
+  debug("%s", "All singles set");
 }
 
 /* Assume that find_uniq_tmp below found a number.  Set this number. */
@@ -263,7 +264,7 @@ static void find_uniq_tmp(struct s *sp)
 /* Find uniqs in rows/col/squs.  Set them. */
 static void set_uniqs(struct s *sp)
 {
-  /* printf("%s\n", "set_uniqs"); */
+  debug("%s", "Set all uniqs");
   int k;
   for (k = 0; k < 9; k++)
     {
@@ -274,13 +275,14 @@ static void set_uniqs(struct s *sp)
       load_row(sp->transformed + 9 * k);
       find_uniq_tmp(sp);
     }
+  debug("%s", "All uniqs set");
 }
 
 /* I call this function find_shadows.  I have no better idea.  Since
    the name is rather bad, I better explain what I want it to do:
    Assume you have the following sudoku:
    +-----------+
-   |7_3|x9x|4_8|  Counting from 0, we look at the first square.  3
+   |7_3|x9x|4_8|  Counting from 0, we look at square 1.  Number 3
    |4__|8x7|___|  cannot go where I put x.  So it has to go to the
    |98_|_4_|__7|  bottom, left or right to 4.  This means, that we
    +-----------+  can eliminate 3 from the bottom line in square 2.
