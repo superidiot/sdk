@@ -1,24 +1,35 @@
-* Disclaimer
+** Disclaimer
   I am writing this code to get a little familiar with c.  My goal is
   to pimp this up a little so that it actually possible to print
   sudokus in a nice way and waste some time solving sudokus by hand.
 
-* Copyright
-** Thoughts
-   The Apache2 license seems reasonable.  I really do not care what anyone
-   does with my code, as long as I do not take any damage of it.  So
-   take the code if you want, and have fun with.  (Or not, whatever...)
-** The License
-   Copyright 2013 Superidiot
+  I will also start sometime to mess around with the git repository.
+  This will involve some sort of rebasing and so on, so if you merge
+  this code with some of your own code, prepare for the merging of
+  doom.
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+** TODO
+   Things that need to be done in my code:
+     1) Free the mallocs of reader.c
+     2) Add option to interactive mode, so that ps can be printed at the given state.
+     3) Implement golden chains
+ 
+** Copyright
+*** Thoughts
+    The Apache2 license seems reasonable.  I really do not care what anyone
+    does with my code, as long as I do not take any damage of it.  So
+    take the code if you want, and have fun with.  (Or not, whatever...)
+*** The License
+    Copyright 2013 Superidiot
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+       	http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.

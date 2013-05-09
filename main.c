@@ -2,12 +2,6 @@
 #include <stdlib.h>
 #include "sudoku.h"
 
-/* TODO:
- * 1. free the mallocs of reader.c
- * 2. Add option to interactive mode, so that ps can be printed at the given state.
- * 3. implement golden chains
- */
-
 int main (int argc, char *argv[])
 {
   int i, c, interactive, solved;
