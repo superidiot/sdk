@@ -138,6 +138,12 @@ static void rem_n_at(struct s *sp, struct f *fp)
 static void init_ns(struct s *sp)
 {
   debug("Initializing ns");
+  if (interactive)
+    {
+      log_info("%s", "Initializing.  Press [Enter] to continue");
+      getchar();
+    }
+
   int i, j;
   for (i = 0; i < 9; i++)
     {
@@ -149,6 +155,7 @@ static void init_ns(struct s *sp)
             }
         }
     }
+  if (interactive) printer_cli(sp);
 }
 
 /* Set index (i,j) to number n.  Do all the easy removals in the
