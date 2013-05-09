@@ -162,9 +162,9 @@ static void set_n_at(struct s *sp, struct f *fp, int n)
       log_info("%s", "Press [Enter] to continue.");
       getchar();
     }
-  if ((*fp).n != n){
-    (*fp).n = n;
-    (*fp).ns = 0;
+  if (fp->n != n){
+    fp->n = n;
+    fp->ns = 0;
     rem_n_at(sp, fp);
     changed = TRUE;
   }
