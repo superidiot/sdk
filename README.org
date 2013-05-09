@@ -8,8 +8,8 @@
   this code with some of your own code, prepare for the merging of
   doom.
 
-** TODO Things that need to be done in my code: [1/3]
-     - [X] Free the mallocs of reader.c
+** TODO Things that need to be done in my code: [0/3]
+     - [ ] Free the mallocs of reader.c
      - [ ] Add option to interactive mode, so that ps can be printed at the given state.
      - [ ] Implement golden chains
  
