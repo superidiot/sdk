@@ -22,8 +22,6 @@ static struct desk
   /* index contains index of row, column or subsquare */
   int index;
 
-  /* type contains 'r' for row, 'c' for column, 's' for subsquare */
-  /* char type; */
 } desktop;
 
 /* Determine the hamming-weight of number.  The hamming weight of a
@@ -42,7 +40,7 @@ static int popcount(int ns)
   return c;
 }
 
-/* ns are the possible numbers that can go int a field.
+/* ns are the possible numbers that can go into a field.
    Since ns has 0s and 1s in the corresponding places, I was able to
    use an ugly one-liner.
    The function returns true if ns contains n, else false. */
@@ -242,7 +240,6 @@ static void set_uniq_tmp(struct s *sp, int n)
    +~~~~~~~~~~~~ */
 static void find_uniq_tmp(struct s *sp)
 {
-  /* printf("%s\n", "find_uniq_tmp"); */
   int i,n,c;
   for (n = 0; n < 9; n++)
     {
@@ -304,6 +301,7 @@ static void find_shadows(struct s *sp, int transposed)
   int rest; /* holds the rest of the current 9-tupel to verify the
                candidates.*/
   int i,row;
+
   for (row = 0; row < 9; row++)
     {
       for (tripel = 0; tripel < 9; tripel += 3)
