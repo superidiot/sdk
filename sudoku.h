@@ -4,6 +4,9 @@
 /* offset = row + column*NUMROWS. */
 #define MATRIX_COL_MAJOR_IDX(A, nrow, row, col) A[row + col * nrow]
 
+#define TRUE 1
+#define FALSE 0
+
 
 struct f {
   int n;

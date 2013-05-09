@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include "sudoku.h"
 #include "dbg.h"
-enum bool {false = 0, true = 1};
-enum bool changed;
-enum bool interactive = false;
+
+int changed;
+int interactive = FALSE;
 
 /* I didn't know how to call this struct, but I think desk fits
    nicely, since I intend to load all the relevant information I have
@@ -46,9 +46,9 @@ static int popcount(int ns)
    Since ns has 0s and 1s in the corresponding places, I was able to
    use an ugly one-liner.
    The function returns true if ns contains n, else false. */
-static enum bool contains(int ns, int n)
+static int contains(int ns, int n)
 {
-  return ( (ns & (1 << (n - 1))) > 0 ? true : false);
+  return ( (ns & (1 << (n - 1))) > 0 ? TRUE : FALSE);
 }
 
 /* loads the row k to the desktop.  So int the desktop-struct, the
@@ -103,9 +103,8 @@ static void rem_n_tmp(int n)
       if ( contains(desktop.fields[i]->ns, n) )
         {
           desktop.fields[i]->ns &= ~(1 << (n - 1));
-          changed = true;
+          changed = TRUE;
         }
-      else changed = false;
     }
 }
 
@@ -167,9 +166,8 @@ static void set_n_at(struct s *sp, struct f *fp, int n)
     (*fp).n = n;
     (*fp).ns = 0;
     rem_n_at(sp, fp);
-    changed = true;
+    changed = TRUE;
   }
-  else changed = false;
   if (interactive)
     {
       printer_cli(sp);
@@ -338,7 +336,7 @@ static void find_shadows(struct s *sp)
                     {
                       desktop.fields[i + 3]->ns =
                         desktop.fields[i + 3]->ns & (~candidates);
-                      changed = true;
+                      changed = TRUE;
                     }
                 }  else if (tripel / 3 == 1 )
                 {
@@ -348,7 +346,7 @@ static void find_shadows(struct s *sp)
                            (desktop.fields[i]->ns & (~candidates) ))
                         {
                           desktop.fields[i]->ns = desktop.fields[i]->ns & (~candidates);
-                          changed = true;
+                          changed = TRUE;
                         }
                     }
                   if (i >= 3 )
@@ -358,7 +356,7 @@ static void find_shadows(struct s *sp)
                         {
                           desktop.fields[i + 3]->ns =
                             desktop.fields[i + 3]->ns & (~candidates);
-                          changed = true;
+                          changed = TRUE;
                         }
                     } else if (tripel / 3 == 2)
                     {
@@ -366,7 +364,7 @@ static void find_shadows(struct s *sp)
                            (desktop.fields[i]->ns & (~candidates)) )
                         {
                           desktop.fields[i]->ns = desktop.fields[i]->ns & (~candidates);
-                          changed = true;
+                          changed = TRUE;
                         }
                     }
                 }
@@ -404,16 +402,18 @@ static int test(struct s *sp)
 
 int solver(struct s *sp, int inter)
 {
-  changed = true;
+  changed = TRUE;
   interactive = inter;
+  init_ns(sp);
+
   do
     {
-      init_ns(sp);
+      changed = FALSE;
       set_singles(sp);
       set_uniqs(sp);
       find_shadows(sp);
     }
-  while (changed == true);
+  while (changed);
 
   return test(sp);
 }
