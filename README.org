@@ -1,0 +1,4 @@
+* Disclaimer
+  I am writing this code to get a little familiar with c.  My goal is
+  to pimp this up a little so that it actually possible to print
+  sudokus in a nice way and waste some time solving sudokus by hand.
