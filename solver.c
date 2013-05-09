@@ -194,8 +194,14 @@ static void set_single(struct s *sp, struct f *fp)
    those fields. */
 static void set_singles(struct s *sp)
 {
-  debug("%s", "Set all singles");
   int i,j;
+  if (interactive)
+    {
+      log_info("%s", "Setting singles.  Press [Enter] to continue");
+      getchar();
+    }
+  debug("%s", "Set all singles");
+
   for (i = 0; i < 9; i++)
     {
       for (j = 0; j < 9; j++)
@@ -262,6 +268,11 @@ static void find_uniq_tmp(struct s *sp)
 /* Find uniqs in rows/col/squs.  Set them. */
 static void set_uniqs(struct s *sp)
 {
+  if (interactive)
+    {
+      log_info("%s", "Setting uniqs.  Press [Enter] to continue");
+      getchar();
+    }
   debug("%s", "Set all uniqs");
   int k;
   for (k = 0; k < 9; k++)
@@ -302,6 +313,13 @@ static void find_shadows(struct s *sp, int transposed)
   int rest; /* holds the rest of the current 9-tupel to verify the
                candidates.*/
   int i,row;
+
+  if (interactive)
+    {
+      log_info("%s", "Finding shadows:");
+      log_info("%s", "Press [Enter] to continue.");
+      getchar();
+    }
 
   for (row = 0; row < 9; row++)
     {
