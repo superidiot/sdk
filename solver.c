@@ -158,7 +158,8 @@ static void set_n_at(struct s *sp, struct f *fp, int n)
   debug("Set %d at (%d,%d)", n, fp->row_i, fp->col_j);
   if (interactive)
     {
-      /* printf("setting %d for field [%d]%d)\n", n, fp->n, fp->ns); */
+      log_info("setting %d at (%d,%d)", n, fp->row_i, fp->col_j);
+      log_info("%s", "Press [Enter] to continue.");
       getchar();
     }
   if ((*fp).n != n){
