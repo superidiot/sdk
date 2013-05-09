@@ -37,5 +37,10 @@ enum numbers { ONE   = 1,
 struct s *reader(FILE *fd);
 
 void printer_cli (struct s *sp);
+void printer_ps (struct s *sp,
+		 const char *filename,
+		 int offsetX,
+		 int offsetY,
+		 const char *mode);
 
 int solver (struct s *sp, int interactive);

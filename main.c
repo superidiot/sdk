@@ -48,13 +48,13 @@ int main (int argc, char *argv[])
     }
   else
     {
-      /* int i,j; */
       FILE *fp = fopen(file,"r");
       struct s *sp;
       sp = reader(fp);
       fclose(fp);
       printer_cli(sp);
-      /* printer_ps(sp, "sudoku.ps", 1, 11, "w"); */
+      /* Example call of printer_ps.
+       * printer_ps(sp, "sudoku.ps", 1, 11, "w"); */
       solved = solver(sp, interactive);
       printer_cli(sp);
     }
