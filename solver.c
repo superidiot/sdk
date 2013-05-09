@@ -440,7 +440,6 @@ static int test(struct s *sp)
 
 int solver(struct s *sp, int inter)
 {
-  int transposed = FALSE;
   changed = TRUE;
   interactive = inter;
   init_ns(sp);
@@ -449,10 +448,8 @@ int solver(struct s *sp, int inter)
       changed = FALSE;
       set_singles(sp);
       set_uniqs(sp);
-      transposed = FALSE;
-      find_shadows(sp, transposed);
-      transposed = TRUE;
-      find_shadows(sp, transposed);
+      find_shadows(sp, FALSE); /* find shadows in normal sudoku */
+      find_shadows(sp, TRUE); /* find shadows in transposed sudoku */
     }
   while (changed);
 
