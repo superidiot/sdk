@@ -306,7 +306,7 @@ static void set_uniqs(struct s *sp)
 */
 static void find_shadows(struct s *sp, int transposed)
 {
-  /* printf("%s", "find_shadows"); */
+  debug("%s", "find_shadows");
   int tripel; /* specify at which tripel you are working */
   int candidates; /* holds all the numbers that can go into the
                      current tripel */
