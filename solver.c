@@ -613,7 +613,7 @@ static struct f *find_intersection(struct f *first, struct f *last)
   if (first->row_i == last->row_i);
   /* both are in the same column */
   if (first->col_j == last->col_j);
-  /* both are in the same squaer */
+  /* both are in the same square */
   if ( get_squ_number(first->row_i, first->col_j)
        == get_squ_number(last->row_i, last->col_j) );
   return first;
