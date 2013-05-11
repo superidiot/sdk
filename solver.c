@@ -222,6 +222,68 @@ static void set_singles(struct s *sp)
   debug("%s", "All singles set");
 }
 
+static void remove_tuple(int tupel)
+{
+  int i;
+  for (i = 0; i < 9; i++)
+    {
+      if ( desktop.fields[i]->ns != tupel )
+	{
+	  desktop.fields[i]->ns &= (511 ^ tupel);
+	}
+    }
+}
+
+static void check_row_for_tuples(int i)
+{
+  int tuple, tmp_ns, c, j;
+  struct f *tmp_fp[9];
+  for (tuple = 1; tuple < 9; tuple++)
+    {
+      debug("looking for tuples of length %d", tuple);
+      tmp_ns = c = 0;
+      for (j = 0; j < 9; j++)
+	{
+	  if ( (c == 0) && ( popcount(desktop.fields[j]->ns) == tuple ))
+	    {
+	      tmp_ns = desktop.fields[j]->ns;
+	      tmp_fp[c++] = desktop.fields[j];
+	      debug("found candidate for tuple of length %d at (%d,%d)", tuple, desktop.fields[j]->row_i, desktop.fields[j]->col_j);
+	    }
+	  else
+	    {
+	      if ( (popcount(desktop.fields[j]->ns) == tuple) && ( (tmp_ns ^ desktop.fields[j]->ns) == 0) )
+		{
+		  tmp_fp[c++] = desktop.fields[j];
+		  debug("Tuple of length %d continues at (%d,%d)", tuple, tmp_fp[c - 1]->row_i, tmp_fp[c - 1]->col_j);
+		}
+	    }
+	}
+      if ( c == tuple )
+	{
+	  remove_tuple(tmp_fp[0]->ns);
+	  debug("Tuple in row %d, starting at (%d,%d)!", i, tmp_fp[0]->row_i, tmp_fp[0]->col_j);
+	}
+    }
+}
+
+static void remove_tuples(struct s *sp)
+{
+  int i;
+
+  for (i = 0; i < 9; i++)
+    {
+      debug("looking for tuples in row %d", i);
+
+      load_row(sp->normal + 9 * i);
+      check_row_for_tuples(i);
+      load_row(sp->transposed + 9 * i);
+      check_row_for_tuples(i);
+      load_row(sp->transformed + 9 * i);
+      check_row_for_tuples(i);
+    }
+}
+
 /* Assume that find_uniq_tmp below found a number.  Set this number. */
 static void set_uniq_tmp(struct s *sp, int n)
 {
@@ -492,7 +554,7 @@ int check_golden_candidate(struct s *sp, struct f *candidate)
   int row_check, col_check, squ_check;
   row_check = col_check = squ_check = 0;
   debug("check candidate at (%d,%d)",
-  	   candidate->row_i, candidate->col_j);
+	candidate->row_i, candidate->col_j);
   load_row(sp->normal + 9 * candidate->row_i);
   row_check = check_golden_candidate_helper(candidate);
   load_row(sp->transposed + 9 * candidate->col_j);
@@ -551,7 +613,7 @@ static struct f *find_intersection(struct f *first, struct f *last)
   if (first->row_i == last->row_i);
   /* both are in the same column */
   if (first->col_j == last->col_j);
-  /* both are in the same squaer */
+  /* both are in the same square */
   if ( get_squ_number(first->row_i, first->col_j)
        == get_squ_number(last->row_i, last->col_j) );
   return first;
@@ -590,12 +652,13 @@ int solver(struct s *sp, int inter)
       changed = FALSE;
       set_singles(sp);
       set_uniqs(sp);
+      remove_tuples(sp);
       for (i = 1; i < 5; i++)
 	{
 	  find_shadows(sp, i); /* find shadows in normal sudoku */
 	}
     }
   while (changed);
-  find_golden_chain_start(sp);
+  /* find_golden_chain_start(sp); */
   return test(sp);
 }
