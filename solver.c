@@ -491,8 +491,8 @@ int check_golden_candidate(struct s *sp, struct f *candidate)
 {
   int row_check, col_check, squ_check;
   row_check = col_check = squ_check = 0;
-  log_info("check candidate at (%d,%d)",
-	   candidate->row_i, candidate->col_j);
+  debug("check candidate at (%d,%d)",
+  	   candidate->row_i, candidate->col_j);
   load_row(sp->normal + 9 * candidate->row_i);
   row_check = check_golden_candidate_helper(candidate);
   load_row(sp->transposed + 9 * candidate->col_j);
@@ -519,7 +519,7 @@ static void find_golden_chain_start(struct s *sp)
 {
   int i,j;
   struct f *candidate;
-  log_info("checking for golden chains");
+  debug("checking for golden chains");
   for (i = 0; i < 9; i++)
     {
       for (j = 0; j < 9; j++)
@@ -530,7 +530,7 @@ static void find_golden_chain_start(struct s *sp)
 	      /* if yes, check if one of these numbers can be seen
 		 from here */
 	      if ( check_golden_candidate(sp, candidate) )
-		log_info("found golden_chain_start at (%d,%d)",
+		debug("found golden_chain_start at (%d,%d)",
 			 candidate->row_i, candidate->col_j);
 	    }
 	}
