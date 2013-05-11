@@ -222,6 +222,18 @@ static void set_singles(struct s *sp)
   debug("%s", "All singles set");
 }
 
+static void remove_tuple(int tupel)
+{
+  int i;
+  for (i = 0; i < 9; i++)
+    {
+      if ( desktop.fields[i]->ns != tupel )
+	{
+	  desktop.fields[i]->ns &= (511 ^ tupel);
+	}
+    }
+}
+
 static void remove_tuples(struct s *sp)
 {
   int i,j,tuple,c,k,tmp_ns;
@@ -252,7 +264,11 @@ static void remove_tuples(struct s *sp)
 		    }
 		}
 	    }
-	  if ( c == tuple ) log_info("Tuple in row %d, starting at (%d,%d)!", i, tmp_fp[0]->row_i, tmp_fp[0]->col_j);
+	  if ( c == tuple )
+	    {
+	      remove_tuple(tmp_fp[0]->ns);
+	      log_info("Tuple in row %d, starting at (%d,%d)!", i, tmp_fp[0]->row_i, tmp_fp[0]->col_j);
+	    }
 	}
       /* load_row(sp->transposed + 9 * i); */
       /* load_row(sp->transformed + 9 * i); */
