@@ -311,7 +311,7 @@ static void set_uniqs(struct s *sp)
    |2_4|_5_|3_9|  indices.
    +-----------+
 */
-static void find_shadows(struct s *sp, int transposed)
+static void find_shadows(struct s *sp, int mode)
 {
   debug("%s", "find_shadows");
   int tripel; /* specify at which tripel you are working */
@@ -332,20 +332,42 @@ static void find_shadows(struct s *sp, int transposed)
     {
       for (tripel = 0; tripel < 9; tripel += 3)
         {
-	  if (! transposed)
+	  switch ( mode )
 	    {
+	    case 1:
 	      load_row(sp->normal + 9 * row);
+	      break;
+	    case 2:
+	      load_row(sp->transposed + 9 * row);
+	      break;
+	    case 3:
+	      load_row(sp->transformed + 9 * row);
+	      break;
+	    case 4:
+	      load_row(sp->transforposed + 9 * row);
+	      break;
 	    }
-	  else load_row(sp->transposed + 9 * row);
           candidates = (desktop.fields[tripel]->ns |
                         desktop.fields[tripel + 1]->ns |
                         desktop.fields[tripel + 2]->ns);
           rest = 0;
-	  if (! transposed)
+	  switch ( mode )
 	    {
+	    case 1:
 	      load_row(sp->transformed + 9 * get_squ_number(row,tripel));
+	      break;
+	    case 2:
+	      load_row(sp->transforposed + 9 * get_squ_number(row, tripel));
+	      break;
+	    case 3:
+	      load_row(sp->normal + 9 * get_squ_number(row, tripel));
+	      break;
+	    case 4:
+	      load_row(sp->transposed + 9 * get_squ_number(row, tripel));
+	      break;
+	    default: log_err("I do not know what to do with %d", mode);
 	    }
-	  else load_row(sp->transforposed + 9 * get_squ_number(row, tripel));
+
           for (i = 0; i < 6; i++)
             {
               if (row % 3 == 0){
@@ -360,11 +382,24 @@ static void find_shadows(struct s *sp, int transposed)
                 }
             }
           candidates = (511 ^ rest) & candidates;
-          if (! transposed)
+
+	  switch ( mode )
 	    {
+	    case 1:
 	      load_row(sp->normal + 9 * row);
+	      break;
+	    case 2:
+	      load_row(sp->transposed + 9 * row);
+	      break;
+	    case 3:
+	      load_row(sp->transformed + 9 * row);
+	      break;
+	    case 4:
+	      load_row(sp->transforposed + 9 * row);
+	      break;
+	    default: log_err("I do not know what to do with %d", mode);
 	    }
-	  else load_row(sp->transposed + 9 * row);
+
           for (i = 0; i < 6; i++)
             {
               if (tripel / 3 == 0)
@@ -440,6 +475,7 @@ static int test(struct s *sp)
 
 int solver(struct s *sp, int inter)
 {
+  int i;
   changed = TRUE;
   interactive = inter;
   init_ns(sp);
@@ -448,8 +484,10 @@ int solver(struct s *sp, int inter)
       changed = FALSE;
       set_singles(sp);
       set_uniqs(sp);
-      find_shadows(sp, FALSE); /* find shadows in normal sudoku */
-      find_shadows(sp, TRUE); /* find shadows in transposed sudoku */
+      for (i = 1; i < 5; i++)
+	{
+	  find_shadows(sp, i); /* find shadows in normal sudoku */
+	}
     }
   while (changed);
 
