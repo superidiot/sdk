@@ -3,11 +3,6 @@
   to pimp this up a little, so that it might actually be possible to print
   sudokus in a nice way and waste some time solving them by hand.
 
-  I will also start sometime to mess around with the git repository.
-  This will involve some sort of rebasing and so on, so if you merge
-  this code with some of your own code, prepare for the merging of
-  doom.
-
 ** TODO Things that need to be done in my code: [1/4]
    - [X] Rewrite commit history.
      + I did this with the following command:
