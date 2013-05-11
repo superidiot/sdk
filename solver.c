@@ -451,6 +451,18 @@ static void find_shadows(struct s *sp, int mode)
     }
 }
 
+int check_chain_link(struct f *current, struct f *next)
+{
+  if ( (popcount(current->ns) == 2) && (popcount(next->ns) == 2) )
+    {
+      if ( popcount(current->ns | next->ns) == 3 )
+	{
+	  return TRUE;
+	}
+    }
+  return FALSE;
+}
+
 /* test sum and product of rows */
 static int test(struct s *sp)
 {
