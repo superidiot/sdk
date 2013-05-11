@@ -1,7 +1,7 @@
 ** Disclaimer
-  I am writing this code to get a little familiar with c.  My goal is
-  to pimp this up a little so that it actually possible to print
-  sudokus in a nice way and waste some time solving sudokus by hand.
+  I am writing this code to get familiar with c.  My goal is
+  to pimp this up a little, so that it might actually be possible to print
+  sudokus in a nice way and waste some time solving them by hand.
 
   I will also start sometime to mess around with the git repository.
   This will involve some sort of rebasing and so on, so if you merge
