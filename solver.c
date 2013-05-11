@@ -234,42 +234,49 @@ static void remove_tuple(int tupel)
     }
 }
 
-static void remove_tuples(struct s *sp)
+static void check_row_for_tuples(int i)
 {
-  int i,j,tuple,c,k,tmp_ns;
+  int tuple, tmp_ns, c, j;
   struct f *tmp_fp[9];
-  for (i = 0; i < 9; i++)
+  for (tuple = 1; tuple < 9; tuple++)
     {
-      log_info("looking for tuples in row %d", i);
-
-      load_row(sp->normal + 9 * i);
-      for (tuple = 1; tuple < 9; tuple++)
+      debug("looking for tuples of length %d", tuple);
+      tmp_ns = c = 0;
+      for (j = 0; j < 9; j++)
 	{
-	  log_info("looking for tuples of length %d", tuple);
-	  tmp_ns = c = 0;
-	  for (j = 0; j < 9; j++)
+	  if ( (c == 0) && ( popcount(desktop.fields[j]->ns) == tuple ))
 	    {
-	      if ( (c == 0) && ( popcount(desktop.fields[j]->ns) == tuple ))
-		{
-		  tmp_ns = desktop.fields[j]->ns;
-		  tmp_fp[c++] = desktop.fields[j];
-		  log_info("found candidate for tuple of length %d at (%d,%d)", tuple, desktop.fields[j]->row_i, desktop.fields[j]->col_j);
-		}
-	      else
-		{
-		  if ( (popcount(desktop.fields[j]->ns) == tuple) && ( (tmp_ns ^ desktop.fields[j]->ns) == 0) )
-		    {
-		      tmp_fp[c++] = desktop.fields[j];
-		      log_info("Tuple of length %d continues at (%d,%d)", tuple, tmp_fp[c - 1]->row_i, tmp_fp[c - 1]->col_j);
-		    }
-		}
+	      tmp_ns = desktop.fields[j]->ns;
+	      tmp_fp[c++] = desktop.fields[j];
+	      debug("found candidate for tuple of length %d at (%d,%d)", tuple, desktop.fields[j]->row_i, desktop.fields[j]->col_j);
 	    }
-	  if ( c == tuple )
+	  else
 	    {
-	      remove_tuple(tmp_fp[0]->ns);
-	      log_info("Tuple in row %d, starting at (%d,%d)!", i, tmp_fp[0]->row_i, tmp_fp[0]->col_j);
+	      if ( (popcount(desktop.fields[j]->ns) == tuple) && ( (tmp_ns ^ desktop.fields[j]->ns) == 0) )
+		{
+		  tmp_fp[c++] = desktop.fields[j];
+		  debug("Tuple of length %d continues at (%d,%d)", tuple, tmp_fp[c - 1]->row_i, tmp_fp[c - 1]->col_j);
+		}
 	    }
 	}
+      if ( c == tuple )
+	{
+	  remove_tuple(tmp_fp[0]->ns);
+	  debug("Tuple in row %d, starting at (%d,%d)!", i, tmp_fp[0]->row_i, tmp_fp[0]->col_j);
+	}
+    }
+}
+
+static void remove_tuples(struct s *sp)
+{
+  int i;
+
+  for (i = 0; i < 9; i++)
+    {
+      debug("looking for tuples in row %d", i);
+
+      load_row(sp->normal + 9 * i);
+      check_row_for_tuples(i);
       /* load_row(sp->transposed + 9 * i); */
       /* load_row(sp->transformed + 9 * i); */
     }
