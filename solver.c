@@ -277,8 +277,10 @@ static void remove_tuples(struct s *sp)
 
       load_row(sp->normal + 9 * i);
       check_row_for_tuples(i);
-      /* load_row(sp->transposed + 9 * i); */
-      /* load_row(sp->transformed + 9 * i); */
+      load_row(sp->transposed + 9 * i);
+      check_row_for_tuples(i);
+      load_row(sp->transformed + 9 * i);
+      check_row_for_tuples(i);
     }
 }
 
