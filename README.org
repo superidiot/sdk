@@ -16,7 +16,7 @@
 *** Thoughts
     The Apache2 license seems reasonable.  I really do not care what anyone
     does with my code, as long as I do not take any damage of it.  So
-    take the code if you want, and have fun with.  (Or not, whatever...)
+    take the code if you want, and have fun with it.  (Or not, whatever...)
 *** The License
     Copyright 2013 Superidiot
 
