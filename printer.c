@@ -29,7 +29,11 @@ void printer_cli (struct s *sp)
     {
       if (i % 3 == 0)
 	{
-	  printf("%s","+-----------+\n");
+	  if (i == 0)
+	    {
+	       printf("%s","+-----------+\n");
+	    }
+	  else printf("%s","+---+---+---+\n");
 	}
       for (j = 0; j < 9; j++)
 	{
