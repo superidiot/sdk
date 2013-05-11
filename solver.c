@@ -652,6 +652,7 @@ int solver(struct s *sp, int inter)
       changed = FALSE;
       set_singles(sp);
       set_uniqs(sp);
+      remove_tuples(sp);
       for (i = 1; i < 5; i++)
 	{
 	  find_shadows(sp, i); /* find shadows in normal sudoku */
@@ -659,6 +660,5 @@ int solver(struct s *sp, int inter)
     }
   while (changed);
   /* find_golden_chain_start(sp); */
-  remove_tuples(sp);
   return test(sp);
 }
