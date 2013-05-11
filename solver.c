@@ -222,6 +222,29 @@ static void set_singles(struct s *sp)
   debug("%s", "All singles set");
 }
 
+static void remove_tuples(struct s *sp)
+{
+  int i,j,tuple,c;
+  struct f *tp[9];
+  for (i = 0; i < 9; i++)
+    {
+      load_row(sp->normal + 9 * i);
+      for (tuple = 1; tuple < 9; tuple++)
+	{
+	  c = 0;
+	  for (j = 0; j < 9; j++)
+	    {
+	      if ( popcount(desktop.fields[i]->ns) == tuple )
+		{
+		  c++;
+		}
+	    }
+	}
+      load_row(sp->transposed + 9 * i);
+      load_row(sp->transformed + 9 * i);
+    }
+}
+
 /* Assume that find_uniq_tmp below found a number.  Set this number. */
 static void set_uniq_tmp(struct s *sp, int n)
 {
