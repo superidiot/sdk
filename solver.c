@@ -451,7 +451,59 @@ static void find_shadows(struct s *sp, int mode)
     }
 }
 
-int check_chain_link(struct f *current, struct f *next)
+/* check if the fields f and g are equal */
+int f_equal(struct f *f, struct f *g)
+{
+  if ( (f->row_i == g->row_i) && (f->col_j == g->col_j) )
+    {
+      return TRUE;
+    }
+  else return FALSE;
+}
+
+/* check if something promising currently on the desktop */
+int check_golden_candidate_helper(struct f *candidate)
+{
+  int i;
+  for (i = 0; i < 9; i++)
+    {
+      if ( popcount(desktop.fields[i]->ns) == 2 )
+	{
+	  if ( ! (f_equal(desktop.fields[i], candidate)) )
+	    {
+	      if ( popcount(desktop.fields[i]->ns | candidate->ns) == 3)
+		{
+		  debug("found a candidate at (%d,%d)!",
+			   desktop.fields[i]->row_i,
+			   desktop.fields[i]->col_j);
+
+		  return TRUE;
+		}
+	    }
+	}
+    }
+  return FALSE;
+}
+
+/* Check if candidate for starting a golden chain can see something
+   useful */
+int check_golden_candidate(struct s *sp, struct f *candidate)
+{
+  int row_check, col_check, squ_check;
+  row_check = col_check = squ_check = 0;
+  log_info("check candidate at (%d,%d)",
+	   candidate->row_i, candidate->col_j);
+  load_row(sp->normal + 9 * candidate->row_i);
+  row_check = check_golden_candidate_helper(candidate);
+  load_row(sp->transposed + 9 * candidate->col_j);
+  col_check = check_golden_candidate_helper(candidate);
+  load_row(sp->normal + 9 * get_squ_number(candidate->row_i,candidate->col_j));
+  squ_check = check_golden_candidate_helper(candidate);
+  debug("check = %d", (row_check | col_check | squ_check));
+  return (row_check | col_check | squ_check);
+}
+
+static int check_chain_link(struct f *current, struct f *next)
 {
   if ( (popcount(current->ns) == 2) && (popcount(next->ns) == 2) )
     {
@@ -461,6 +513,48 @@ int check_chain_link(struct f *current, struct f *next)
 	}
     }
   return FALSE;
+}
+
+static void find_golden_chain_start(struct s *sp)
+{
+  int i,j;
+  struct f *candidate;
+  log_info("checking for golden chains");
+  for (i = 0; i < 9; i++)
+    {
+      for (j = 0; j < 9; j++)
+	{
+	  /* check if only two numbers are possible */
+	  if ( popcount((candidate = sp->normal[9 * i + j])->ns) == 2 )
+	    {
+	      /* if yes, check if one of these numbers can be seen
+		 from here */
+	      if ( check_golden_candidate(sp, candidate) )
+		log_info("found golden_chain_start at (%d,%d)",
+			 candidate->row_i, candidate->col_j);
+	    }
+	}
+    }
+}
+
+/* find fields, that can be seen from both fields.
+ * The intersection can contain at most 15 fields, -2 for the fields
+ * themselves. */
+static struct f *find_intersection(struct f *first, struct f *last)
+{
+  if ( f_equal(first, last) )
+    {
+      log_err("The same field was passed");
+      return first;
+    }
+  /* both are in the same row */
+  if (first->row_i == last->row_i);
+  /* both are in the same column */
+  if (first->col_j == last->col_j);
+  /* both are in the same squaer */
+  if ( get_squ_number(first->row_i, first->col_j)
+       == get_squ_number(last->row_i, last->col_j) );
+  return first;
 }
 
 /* test sum and product of rows */
@@ -502,6 +596,6 @@ int solver(struct s *sp, int inter)
 	}
     }
   while (changed);
-
+  find_golden_chain_start(sp);
   return test(sp);
 }
