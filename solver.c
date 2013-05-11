@@ -224,19 +224,24 @@ static void set_singles(struct s *sp)
 
 static void remove_tuples(struct s *sp)
 {
-  int i,j,tuple,c;
-  struct f *tp[9];
+  int i,j,tuple,c,k,tmp_ns;
+  struct f *tmp_fp[9];
   for (i = 0; i < 9; i++)
     {
       load_row(sp->normal + 9 * i);
       for (tuple = 1; tuple < 9; tuple++)
 	{
-	  c = 0;
+	  tmp_ns = c = 0;
 	  for (j = 0; j < 9; j++)
 	    {
-	      if ( popcount(desktop.fields[i]->ns) == tuple )
+	      for (k = 0; k < c; k++)
 		{
-		  c++;
+		  tmp_ns ^= tmp_fp[k]->ns;
+		}
+	      tmp_ns ^= desktop.fields[i]->ns;
+	      if ( (popcount(desktop.fields[i]->ns) == tuple) && (tmp_ns == 0) )
+		{
+		  tmp_fp[c++] = desktop.fields[i];
 		}
 	    }
 	}
