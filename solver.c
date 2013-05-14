@@ -622,7 +622,7 @@ static struct f *find_intersection(struct f *first, struct f *last)
 /* test sum and product of rows */
 static int test(struct s *sp)
 {
-  int i,j,p,s,c;
+  int i,j,p,s,c,ret;
   c = 0;
   for (i = 0; i < 9; i++)
     {
@@ -633,12 +633,14 @@ static int test(struct s *sp)
           s += sp->normal[9 * i + j]->n;
           p *= sp->normal[9 * i + j]->n;
         }
-      if (p == 362880 && s == 45)
-        {
-          c++;
-        }
+      if (p == 362880 && s == 45) c++;
+      if ((p != 362880) && (p > 0)) ret = 2;
     }
-  return (c == 9 ? 0 : -1);
+  if (ret == 2)
+    {
+      return ret;
+    }
+  else return (c == 9 ? 0 : 1);
 }
 
 int solver(struct s *sp, int inter)

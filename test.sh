@@ -4,6 +4,9 @@ for i in `ls sudokus`; do
     RET=$?;
     if [ 0 -eq $RET ]; then
 	echo "\033[1;32m solved sudoku $i";
-    else echo "\033[1;31m could not solve $i";
+    elif [ 1 -eq $RET ]; then
+	echo "\033[1;30m could not solve $i";
+    else
+	echo "\033[1;31m made an error solving $i";
     fi;
 done;
