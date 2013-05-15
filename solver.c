@@ -633,7 +633,7 @@ static void start_golden_chain(struct s *sp)
 	  if ( check_golden_candidate(sp, sp->normal[9 * i + j]) )
 	    {
 	      acc[0] = sp->normal[9 * i + j];
-	      build_golden_chain()
+	      build_golden_chain(acc);
 	    }
 	}
     }
@@ -642,7 +642,7 @@ static void start_golden_chain(struct s *sp)
 /*  */
 static int build_golden_chain(struct f **acc)
 {
-
+  return FALSE;
 }
 
 /* test sum and product of rows */
