@@ -569,6 +569,10 @@ int check_golden_candidate(struct s *sp, struct f *candidate)
   return (row_check | col_check | squ_check);
 }
 
+/* Check if next is a valid field for a golden chain.  It should
+   perform the same checks as check_golden_candidate, but
+   adittionally validate whether next is already contained int the
+   chain. */
 static int check_chain_link(struct f *current, struct f *next)
 {
   if ( (popcount(current->ns) == 2) && (popcount(next->ns) == 2) )
