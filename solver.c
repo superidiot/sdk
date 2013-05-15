@@ -523,6 +523,20 @@ int f_equal(struct f *f, struct f *g)
   else return FALSE;
 }
 
+/* check if field f can be seen from field g */
+int f_visible(struct f *f, struct f *g)
+{
+  if ( (f->row_i == g->row_i) ||
+       (f->col_j == g->col_j) ||
+       (get_squ_number(f->row_i, f->col_j) ==
+	get_squ_number(g->row_i, g->col_j)))
+    {
+      return TRUE;
+    }
+  else return FALSE;
+
+}
+
 /* Check if candidate is a promising start for a golden chain.
  * candidate needs to have a popcount of 2. It has to see another
  * field which has a popcount of 2 and shares exactly one number with
