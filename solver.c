@@ -593,7 +593,10 @@ static int check_chain_link(struct f *current, struct f *next)
     {
       if ( popcount(current->ns | next->ns) == 3 )
 	{
-	  return TRUE;
+	  if ( f_visible(current, next) && (! f_equal(current, next)) )
+	    {
+	      return TRUE;
+	    }
 	}
     }
   return FALSE;
