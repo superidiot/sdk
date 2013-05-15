@@ -19,6 +19,13 @@ static struct desk
   /* fields contains pointers to row, column or subsquare */
   struct f **fields;
 
+  /* These fields will contain golden chains */
+  struct f *acc[81];
+
+  /* Contains that can be seen from two distinguished fields at the
+     same time */
+  struct f *intersections[18];
+
   /* index contains index of row, column or subsquare */
   int index;
 
@@ -634,10 +641,14 @@ static int build_golden_chain(struct s *sp, struct f **acc)
 	  if ( check_chain_link(sp->normal[9 * i + j], *acc) )
 	    {
 	      /* add new link to golden chain */
-	      ++acc = sp->normal[9 * i + j];
+	      *(++acc) = sp->normal[9 * i + j];
 	      /* check if start end end of golden chain have
 	       * intersections */
-	      find_intersection(acc[0], *acc
+	      if ( find_intersection(desktop.acc[0], *acc) &&
+		   (desktop.acc[0]->ns | (*acc)->ns) == 3 )
+		{
+		  debug("found a golden chain!");
+		}
 	    }
 	}
     }
@@ -649,15 +660,14 @@ static int build_golden_chain(struct s *sp, struct f **acc)
 static void start_golden_chain(struct s *sp)
 {
   int i, j;
-  struct f *acc[81];
   for (i = 0; i < 9; i++)
     {
       for (j = 0; j < 9; j ++)
 	{
 	  if ( check_golden_candidate(sp, sp->normal[9 * i + j]) )
 	    {
-	      acc[0] = sp->normal[9 * i + j];
-	      build_golden_chain(acc);
+	      desktop.acc[0] = sp->normal[9 * i + j];
+	      build_golden_chain(sp, desktop.acc);
 	    }
 	}
     }
