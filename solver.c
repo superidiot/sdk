@@ -523,7 +523,11 @@ int f_equal(struct f *f, struct f *g)
   else return FALSE;
 }
 
-/* check if something promising currently on the desktop */
+/* Check if candidate is a promising start for a golden chain.
+ * candidate needs to have a popcount of 2. It has to see another
+ * field which has a popcount of 2 and shares exactly one number with
+ * the candidate. These checks are done for fields currently loaded
+ * on the desktop. */
 int check_golden_candidate_helper(struct f *candidate)
 {
   int i;
