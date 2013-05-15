@@ -514,7 +514,7 @@ static void find_shadows(struct s *sp, int mode)
 }
 
 /* check if the fields f and g are equal */
-int f_equal(struct f *f, struct f *g)
+static int f_equal(struct f *f, struct f *g)
 {
   if ( (f->row_i == g->row_i) && (f->col_j == g->col_j) )
     {
@@ -524,7 +524,7 @@ int f_equal(struct f *f, struct f *g)
 }
 
 /* check if field f can be seen from field g */
-int f_visible(struct f *f, struct f *g)
+static int f_visible(struct f *f, struct f *g)
 {
   if ( (f->row_i == g->row_i) ||
        (f->col_j == g->col_j) ||
@@ -542,7 +542,7 @@ int f_visible(struct f *f, struct f *g)
  * field which has a popcount of 2 and shares exactly one number with
  * the candidate. These checks are done for fields currently loaded
  * on the desktop. */
-int check_golden_candidate_helper(struct f *candidate)
+static int check_golden_candidate_helper(struct f *candidate)
 {
   int i;
   for (i = 0; i < 9; i++)
@@ -567,7 +567,7 @@ int check_golden_candidate_helper(struct f *candidate)
 
 /* Check if candidate for starting a golden chain can see something
    useful */
-int check_golden_candidate(struct s *sp, struct f *candidate)
+static int check_golden_candidate(struct s *sp, struct f *candidate)
 {
   int row_check, col_check, squ_check;
   row_check = col_check = squ_check = 0;
