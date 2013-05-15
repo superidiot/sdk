@@ -622,9 +622,27 @@ static struct f *find_intersection(struct f *first, struct f *last)
   return first;
 }
 
-/*  */
-static int build_golden_chain(struct f **acc)
+/* recursivly build a golden chain and save it in acc */
+static int build_golden_chain(struct s *sp, struct f **acc)
 {
+  int i,j;
+  /* find the next element */
+  for (i = 0; i < 9; i++)
+    {
+      for (j = 0; j < 9; j++)
+	{
+	  if ( check_chain_link(sp->normal[9 * i + j], *acc) )
+	    {
+	      /* add new link to golden chain */
+	      ++acc = sp->normal[9 * i + j];
+	      /* check if start end end of golden chain have
+	       * intersections */
+	      find_intersection(acc[0], *acc
+	    }
+	}
+    }
+  /* if not add new element to accumulator, call this function again */
+  /* if no new element was found abort */
   return FALSE;
 }
 
