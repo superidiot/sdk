@@ -602,28 +602,6 @@ static int check_chain_link(struct f *current, struct f *next)
   return FALSE;
 }
 
-static void find_golden_chain_start(struct s *sp)
-{
-  int i,j;
-  struct f *candidate;
-  debug("checking for golden chains");
-  for (i = 0; i < 9; i++)
-    {
-      for (j = 0; j < 9; j++)
-	{
-	  /* check if only two numbers are possible */
-	  if ( popcount((candidate = sp->normal[9 * i + j])->ns) == 2 )
-	    {
-	      /* if yes, check if one of these numbers can be seen
-		 from here */
-	      if ( check_golden_candidate(sp, candidate) )
-		debug("found golden_chain_start at (%d,%d)",
-			 candidate->row_i, candidate->col_j);
-	    }
-	}
-    }
-}
-
 /* find fields, that can be seen from both fields.
  * The intersection can contain at most 15 fields, -2 for the fields
  * themselves. */
@@ -642,6 +620,29 @@ static struct f *find_intersection(struct f *first, struct f *last)
   if ( get_squ_number(first->row_i, first->col_j)
        == get_squ_number(last->row_i, last->col_j) );
   return first;
+}
+
+static void start_golden_chain(struct s *sp)
+{
+  int i, j;
+  struct f *acc[81];
+  for (i = 0; i < 9; i++)
+    {
+      for (j = 0; j < 9; j ++)
+	{
+	  if ( check_golden_candidate(sp, sp->normal[9 * i + j]) )
+	    {
+	      acc[0] = sp->normal[9 * i + j];
+	      build_golden_chain()
+	    }
+	}
+    }
+}
+
+/*  */
+static int build_golden_chain(struct f **acc)
+{
+
 }
 
 /* test sum and product of rows */
