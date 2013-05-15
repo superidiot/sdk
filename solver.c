@@ -622,6 +622,12 @@ static struct f *find_intersection(struct f *first, struct f *last)
   return first;
 }
 
+/*  */
+static int build_golden_chain(struct f **acc)
+{
+  return FALSE;
+}
+
 static void start_golden_chain(struct s *sp)
 {
   int i, j;
@@ -637,12 +643,6 @@ static void start_golden_chain(struct s *sp)
 	    }
 	}
     }
-}
-
-/*  */
-static int build_golden_chain(struct f **acc)
-{
-  return FALSE;
 }
 
 /* test sum and product of rows */
