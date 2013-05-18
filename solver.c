@@ -628,10 +628,10 @@ static struct f *build_intersection(struct s *sp, struct f *first, struct f *las
       section[9] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j)];
     }
   if ( (first->col_j == last->col_j) &&
-       (get_squ_number(first->row_i, first->col_j) == get_squ_number(last->row_i, last->col_j) )
+       (get_squ_number(first->row_i, first->col_j) == get_squ_number(last->row_i, last->col_j)) )
     {
       section = (struct f **) malloc(18 * sizeof(struct f *));
-      section[0] = sp->tranposed[9 * first->col_j];
+      section[0] = sp->transposed[9 * first->col_j];
       section[9] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j)];
     }
   else if (first->row_i == last->row_i)
