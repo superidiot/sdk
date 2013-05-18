@@ -612,20 +612,39 @@ static int check_chain_link(struct f *current, struct f *next)
 /* find fields, that can be seen from both fields.
  * The intersection can contain at most 15 fields, -2 for the fields
  * themselves. */
-static struct f *find_intersection(struct f *first, struct f *last)
+static struct f *find_intersection(struct s *sp, struct f *first, struct f *last)
 {
+  struct f **section;
   if ( f_equal(first, last) )
     {
       log_err("The same field was passed");
       return first;
     }
-  /* both are in the same row */
-  if (first->row_i == last->row_i);
-  /* both are in the same column */
-  if (first->col_j == last->col_j);
-  /* both are in the same square */
-  if ( get_squ_number(first->row_i, first->col_j)
-       == get_squ_number(last->row_i, last->col_j) );
+  if ( (first->row_i == last->row_i) ||
+       (first->col_j == last->col_j) )
+    {
+      if ( get_squ_number(first->row_i, first->col_j)
+	   == get_squ_number(last->row_i, last->col_j) )
+	{
+	  section = (struct f **) malloc(18 * sizeof(struct f *));
+	  section = sp->normal[9 * first->row_i];
+	  section[9] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j)]
+	}
+    }
+  else if (first->row_i == last->row_i)
+    {
+      /* section =  */
+    }
+  else if (first->col_j == last->col_j)
+    {
+    }
+  else if ( get_squ_number(first->row_i, first->col_j)
+       == get_squ_number(last->row_i, last->col_j) )
+    {
+    }
+  else
+    {
+    }
   return first;
 }
 
