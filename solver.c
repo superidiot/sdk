@@ -600,7 +600,7 @@ static int f_inAcc(struct f *fp)
   int i;
   for (i = 0; i < accu.n; i++)
     {
-      if ( f_equal(accu[i], fp) )
+      if ( f_equal(accu.fields[i], fp) )
 	{
 	  return TRUE;
 	}
