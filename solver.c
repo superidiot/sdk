@@ -595,9 +595,17 @@ static int check_golden_candidate(struct s *sp, struct f *candidate)
   return (row_check | col_check | squ_check);
 }
 
-static int f_inAcc()
+static int f_inAcc(struct f *fp)
 {
-  return TRUE;
+  int i;
+  for (i = 0; i < accu.n; i++)
+    {
+      if (f_equal(accu[i], fp)
+	{
+	  return TRUE;
+	}
+    }
+  return FALSE;
 }
 
 /* Check if next is a valid field for a golden chain.  It should
