@@ -24,7 +24,7 @@ static struct desk
 
   /* Contains that can be seen from two distinguished fields at the
      same time */
-  struct f *intersections[18];
+  struct f *intersection[18];
 
   /* index contains index of row, column or subsquare */
   int index;
@@ -623,32 +623,32 @@ static struct f *build_intersection(struct s *sp, struct f *first, struct f *las
   if ( (first->row_i == last->row_i) &&
        (get_squ_number(first->row_i, first->col_j) == get_squ_number(last->row_i, last->col_j)) )
     {
-      section[0] = sp->normal[9 * first->row_i];
-      section[9] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j)];
+      desktop.intersection[0] = sp->normal[9 * first->row_i];
+      desktop.intersection[9] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j)];
     }
   if ( (first->col_j == last->col_j) &&
        (get_squ_number(first->row_i, first->col_j) == get_squ_number(last->row_i, last->col_j)) )
     {
-      section[0] = sp->transposed[9 * first->col_j];
-      section[9] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j)];
+      desktop.intersection[0] = sp->transposed[9 * first->col_j];
+      desktop.intersection[9] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j)];
     }
   else if (first->row_i == last->row_i)
     {
-      section = &(sp->normal[9 * first->row_i]);
+      desktop.intersection[0] = sp->normal[9 * first->row_i];
     }
   else if (first->col_j == last->col_j)
     {
-      section = &(sp->transposed[9 * first->col_j]);
+      desktop.intersection = &(sp->transposed[9 * first->col_j]);
     }
   else if ( get_squ_number(first->row_i, first->col_j)
        == get_squ_number(last->row_i, last->col_j) )
     {
-      section = &(sp->transformed[9 * get_squ_number(first->row_i, first->col_j)]);
+      desktop.intersection = &(sp->transformed[9 * get_squ_number(first->row_i, first->col_j)]);
     }
   else
     {
-      *(section++) = sp->normal[9 * first->row_i + last->col_j];
-      section = &(sp->normal[9 * last->row_i + first->col_j]);
+      *(desktop.intersection++) = sp->normal[9 * first->row_i + last->col_j];
+      desktop.intersection = &(sp->normal[9 * last->row_i + first->col_j]);
     }
   return first;
 }
