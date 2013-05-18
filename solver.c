@@ -609,9 +609,10 @@ static int check_chain_link(struct f *current, struct f *next)
   return FALSE;
 }
 
-/* find fields, that can be seen from both fields.
- * The intersection can contain at most 15 fields, -2 for the fields
- * themselves. */
+/* Find fields, that can be seen from the fields first and last.
+ * This function saves all fields from the intersection to
+ * desktop.intersection, and returns the number of fields, that were
+ * saved.*/
 static struct f *build_intersection(struct s *sp, struct f *first, struct f *last)
 {
   int ret;
