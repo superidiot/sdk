@@ -634,7 +634,7 @@ static int check_chain_link(struct f *current, struct f *next)
  * This function saves all fields from the intersection to
  * desktop.intersection, and returns the number of fields, that were
  * saved.*/
-static struct f *build_intersection(struct s *sp, struct f *first, struct f *last)
+static int build_intersection(struct s *sp, struct f *first, struct f *last)
 {
   int r;
   if ( f_equal(first, last) )
