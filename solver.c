@@ -697,7 +697,7 @@ static int build_golden_chain(struct s *sp)
 	      /* check if start end end of golden chain have
 	       * intersections */
 	      if ( build_intersection(sp, accu.fields[0], accu.fields[accu.n]) &&
-		   (accu.fields[0]->ns | (accu.fields[accu.n]->ns) == 3 )
+		   (accu.fields[0]->ns | accu.fields[accu.n]->ns) == 3 )
 		{
 		  debug("found a golden chain!");
 		}
