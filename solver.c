@@ -6,6 +6,14 @@
 int changed;
 int interactive = FALSE;
 
+static struct acc
+{
+  /* These fields will contain golden chains */
+  struct f *fields[81];
+  /* Record the number of elements in the accumulator */
+  int n;
+} accu;
+
 /* I didn't know how to call this struct, but I think desk fits
    nicely, since I intend to load all the relevant information I have
    about the current working row/column/square into this struct
@@ -18,9 +26,6 @@ static struct desk
 {
   /* fields contains pointers to row, column or subsquare */
   struct f **fields;
-
-  /* These fields will contain golden chains */
-  struct f *acc[81];
 
   /* Contains that can be seen from two distinguished fields at the
      same time */
