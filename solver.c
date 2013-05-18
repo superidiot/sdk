@@ -633,17 +633,20 @@ static struct f *find_intersection(struct s *sp, struct f *first, struct f *last
     }
   else if (first->row_i == last->row_i)
     {
-      /* section =  */
+      section = (struct f **) malloc(9 * sizeof(struct f *));
     }
   else if (first->col_j == last->col_j)
     {
+      section = (struct f **) malloc(9 * sizeof(struct f *));
     }
   else if ( get_squ_number(first->row_i, first->col_j)
        == get_squ_number(last->row_i, last->col_j) )
     {
+      section = (struct f **) malloc(9 * sizeof(struct f *));
     }
   else
     {
+      section = (struct f **) malloc(2 * sizeof(struct f *));
     }
   return first;
 }
