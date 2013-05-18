@@ -568,7 +568,6 @@ static int check_golden_candidate_helper(struct f *candidate)
 		  debug("found a candidate at (%d,%d)!",
 			   desktop.fields[i]->row_i,
 			   desktop.fields[i]->col_j);
-
 		  return TRUE;
 		}
 	    }
@@ -583,7 +582,7 @@ static int check_golden_candidate(struct s *sp, struct f *candidate)
 {
   int row_check, col_check, squ_check;
   row_check = col_check = squ_check = 0;
-  debug("check candidate at (%d,%d)",
+  log_info("check candidate at (%d,%d)",
 	candidate->row_i, candidate->col_j);
   load_row(sp->normal + 9 * candidate->row_i);
   row_check = check_golden_candidate_helper(candidate);
@@ -591,7 +590,7 @@ static int check_golden_candidate(struct s *sp, struct f *candidate)
   col_check = check_golden_candidate_helper(candidate);
   load_row(sp->normal + 9 * get_squ_number(candidate->row_i,candidate->col_j));
   squ_check = check_golden_candidate_helper(candidate);
-  debug("check = %d", (row_check | col_check | squ_check));
+  log_info("check = %d", (row_check | col_check | squ_check));
   return (row_check | col_check | squ_check);
 }
 
@@ -681,9 +680,20 @@ static int build_intersection(struct s *sp, struct f *first, struct f *last)
   return r;
 }
 
+static void print_accu()
+{
+  int i;
+  printf("accu contains:");
+  for (i = 0; i < accu.n; i++)
+    {
+      printf(" (%d,%d)", accu.fields[i]->row_i, accu.fields[i]->col_j);
+    }
+  printf("%s", "\n");
+}
 /* recursivly build a golden chain and save it in acc */
 static int build_golden_chain(struct s *sp)
 {
+  print_accu;
   int i,j, tmp_accun;
   /* find the next element */
   for (i = 0; i < 9; i++)
@@ -704,6 +714,7 @@ static int build_golden_chain(struct s *sp)
 		}
 	      else
 		{
+		  debug("call build_golden_chain recursively");
 		  build_golden_chain(sp);
 		  accu.n = tmp_accun;
 		}
@@ -722,6 +733,7 @@ static void start_golden_chain(struct s *sp)
     {
       for (j = 0; j < 9; j ++)
 	{
+	  log_info("look for golden chains, start at (%d,%d)", i, j);
 	  if ( check_golden_candidate(sp, sp->normal[9 * i + j]) )
 	    {
 	      accu.fields[(accu.n = 0)] = sp->normal[9 * i + j];
