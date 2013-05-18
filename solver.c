@@ -614,7 +614,6 @@ static int check_chain_link(struct f *current, struct f *next)
  * themselves. */
 static struct f *build_intersection(struct s *sp, struct f *first, struct f *last)
 {
-  struct f **section;
   if ( f_equal(first, last) )
     {
       log_err("The same field was passed");
