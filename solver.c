@@ -638,17 +638,17 @@ static struct f *build_intersection(struct s *sp, struct f *first, struct f *las
     }
   else if (first->col_j == last->col_j)
     {
-      desktop.intersection = &(sp->transposed[9 * first->col_j]);
+      desktop.intersection[0] = sp->transposed[9 * first->col_j];
     }
   else if ( get_squ_number(first->row_i, first->col_j)
        == get_squ_number(last->row_i, last->col_j) )
     {
-      desktop.intersection = &(sp->transformed[9 * get_squ_number(first->row_i, first->col_j)]);
+      desktop.intersection[0] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j)];
     }
   else
     {
-      *(desktop.intersection++) = sp->normal[9 * first->row_i + last->col_j];
-      desktop.intersection = &(sp->normal[9 * last->row_i + first->col_j]);
+      desktop.intersection[0] = sp->normal[9 * first->row_i + last->col_j];
+      desktop.intersection[1] = sp->normal[9 * last->row_i + first->col_j];
     }
   return first;
 }
