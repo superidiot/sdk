@@ -612,7 +612,7 @@ static int check_chain_link(struct f *current, struct f *next)
 /* find fields, that can be seen from both fields.
  * The intersection can contain at most 15 fields, -2 for the fields
  * themselves. */
-static struct f *find_intersection(struct s *sp, struct f *first, struct f *last)
+static struct f *build_intersection(struct s *sp, struct f *first, struct f *last)
 {
   struct f **section;
   if ( f_equal(first, last) )
@@ -666,7 +666,7 @@ static int build_golden_chain(struct s *sp, struct f **acc)
 	      *(++acc) = sp->normal[9 * i + j];
 	      /* check if start end end of golden chain have
 	       * intersections */
-	      if ( find_intersection(desktop.acc[0], *acc) &&
+	      if ( build_intersection(sp, desktop.acc[0], *acc) &&
 		   (desktop.acc[0]->ns | (*acc)->ns) == 3 )
 		{
 		  debug("found a golden chain!");
