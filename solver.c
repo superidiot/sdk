@@ -682,7 +682,7 @@ static int build_intersection(struct s *sp, struct f *first, struct f *last)
 }
 
 /* recursivly build a golden chain and save it in acc */
-static int build_golden_chain(struct s *sp, struct f **acc)
+static int build_golden_chain(struct s *sp)
 {
   int i,j;
   /* find the next element */
@@ -693,11 +693,11 @@ static int build_golden_chain(struct s *sp, struct f **acc)
 	  if ( check_chain_link(sp->normal[9 * i + j], *acc) )
 	    {
 	      /* add new link to golden chain */
-	      *(++acc) = sp->normal[9 * i + j];
+	      accu.fields[accu.n] = sp->normal[9 * i + j];
 	      /* check if start end end of golden chain have
 	       * intersections */
-	      if ( build_intersection(sp, desktop.acc[0], *acc) &&
-		   (desktop.acc[0]->ns | (*acc)->ns) == 3 )
+	      if ( build_intersection(sp, accu.fields[0]) &&
+		   (accu.fields[0]->ns | (accu.fields[accu.n]->ns) == 3 )
 		{
 		  debug("found a golden chain!");
 		}
@@ -718,8 +718,8 @@ static void start_golden_chain(struct s *sp)
 	{
 	  if ( check_golden_candidate(sp, sp->normal[9 * i + j]) )
 	    {
-	      desktop.acc[0] = sp->normal[9 * i + j];
-	      build_golden_chain(sp, desktop.acc);
+	      accu.fields[0] = sp->normal[9 * i + j];
+	      build_golden_chain(sp);
 	    }
 	}
     }
