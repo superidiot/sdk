@@ -690,13 +690,13 @@ static int build_golden_chain(struct s *sp)
     {
       for (j = 0; j < 9; j++)
 	{
-	  if ( check_chain_link(sp->normal[9 * i + j], *acc) )
+	  if ( check_chain_link(accu.fields[accu.n], sp->normal[9 * i + j]) )
 	    {
 	      /* add new link to golden chain */
 	      accu.fields[accu.n] = sp->normal[9 * i + j];
 	      /* check if start end end of golden chain have
 	       * intersections */
-	      if ( build_intersection(sp, accu.fields[0]) &&
+	      if ( build_intersection(sp, accu.fields[0], accu.fields[accu.n]) &&
 		   (accu.fields[0]->ns | (accu.fields[accu.n]->ns) == 3 )
 		{
 		  debug("found a golden chain!");
