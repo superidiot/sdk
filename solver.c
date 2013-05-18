@@ -640,7 +640,7 @@ static int build_intersection(struct s *sp, struct f *first, struct f *last)
   if ( f_equal(first, last) )
     {
       log_err("The same field was passed");
-      return first;
+      return -1;
     }
   if ( (first->row_i == last->row_i) &&
        (get_squ_number(first->row_i, first->col_j) == get_squ_number(last->row_i, last->col_j)) )
