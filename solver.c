@@ -620,7 +620,7 @@ static int check_chain_link(struct f *current, struct f *next)
 	{
 	  if ( f_visible(current, next) && (! f_equal(current, next)) )
 	    {
-	      if ( !f_inAcc(next) )
+	      if ( ! f_inAcc(next) )
 		{
 		  return TRUE;
 		}
@@ -693,7 +693,7 @@ static int build_golden_chain(struct s *sp)
 	  if ( check_chain_link(accu.fields[accu.n], sp->normal[9 * i + j]) )
 	    {
 	      /* add new link to golden chain */
-	      accu.fields[accu.n] = sp->normal[9 * i + j];
+	      accu.fields[++accu.n] = sp->normal[9 * i + j];
 	      /* check if start end end of golden chain have
 	       * intersections */
 	      if ( build_intersection(sp, accu.fields[0], accu.fields[accu.n]) &&
@@ -718,7 +718,7 @@ static void start_golden_chain(struct s *sp)
 	{
 	  if ( check_golden_candidate(sp, sp->normal[9 * i + j]) )
 	    {
-	      accu.fields[0] = sp->normal[9 * i + j];
+	      accu.fields[(accu.n = 0)] = sp->normal[9 * i + j];
 	      build_golden_chain(sp);
 	    }
 	}
