@@ -653,8 +653,8 @@ static struct f *build_intersection(struct s *sp, struct f *first, struct f *las
   else
     {
       section = (struct f **) malloc(2 * sizeof(struct f *));
-      section++ = &(sp->normal[9 * first->row_i + last->col_j])
-      section = &(sp->normal[9 * last->row_i + first->col_j])
+      *(section++) = sp->normal[9 * first->row_i + last->col_j];
+      section = &(sp->normal[9 * last->row_i + first->col_j]);
     }
   return first;
 }
