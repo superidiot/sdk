@@ -773,6 +773,6 @@ int solver(struct s *sp, int inter)
 	}
     }
   while (changed);
-  /* find_golden_chain_start(sp); */
+  start_golden_chain(sp);
   return test(sp);
 }
