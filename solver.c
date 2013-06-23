@@ -559,10 +559,13 @@ static int check_golden_candidate_helper(struct f *candidate)
   int i;
   for (i = 0; i < 9; i++)
     {
+      /* Is another field with exactly two possible numbers loaded? */
       if ( popcount(desktop.fields[i]->ns) == 2 )
 	{
+	  /* This should not be the candidate itself */
 	  if ( ! (f_equal(desktop.fields[i], candidate)) )
 	    {
+	      /* It should share exactly one number with the candidate */
 	      if ( popcount(desktop.fields[i]->ns | candidate->ns) == 3)
 		{
 		  debug("found a candidate at (%d,%d)!",
@@ -609,7 +612,7 @@ static int f_inAcc(struct f *fp)
 
 /* Check if next is a valid field for a golden chain.  It should
    perform the same checks as check_golden_candidate, but
-   adittionally validate whether next is already contained int the
+   adittionally validate whether next is already contained in the
    chain. */
 static int check_chain_link(struct f *current, struct f *next)
 {
