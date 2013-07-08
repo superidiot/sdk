@@ -659,18 +659,22 @@ static int build_golden_chain(struct s *sp)
 	  if ( check_chain_link(accu.fields[accu.n], sp->normal[9 * i + j]) )
 	    {
 	      /* add new link to golden chain */
+	      debug("Add link (%d,%d) to golden chain.", i, j);
 	      accu.fields[++accu.n] = sp->normal[9 * i + j];
 	      /* check if start end end of golden chain have
 	       * intersections */
 	      tmp_accun = accu.n;
+	      debug("Check for intersection of { (%d,%d), (%d,%d) }",
+		    accu.fields[0]->row_i, accu.fields[0]->col_j,
+		    accu.fields[accu.n]->row_i, accu.fields[accu.n]->col_j);
 	      if ( build_intersection(sp, accu.fields[0], accu.fields[accu.n]) &&
-		   (accu.fields[0]->ns | accu.fields[accu.n]->ns) == 3 )
+		   (accu.fields[0]->ns | accu.fields[accu.n]->ns) == 2 )
 		{
-		  debug("found a golden chain!");
+		  debug("Valid Intersection: found a golden chain!");
 		}
 	      else
 		{
-		  debug("call build_golden_chain recursively");
+		  debug("No intersection: call build_golden_chain recursively");
 		  build_golden_chain(sp);
 		  accu.n = tmp_accun;
 		}
@@ -689,9 +693,10 @@ static void start_golden_chain(struct s *sp)
     {
       for (j = 0; j < 9; j ++)
 	{
-	  log_info("look for golden chains, start at (%d,%d)", i, j);
-	  if ( check_golden_candidate(sp, sp->normal[9 * i + j]) )
+	  debug("look for golden chains, start at (%d,%d)", i, j);
+	  if ( popcount(sp->normal[9 * i + j]->ns) == 2 )
 	    {
+	      debug("Starting chain at (%d,%d)", i, j);
 	      accu.fields[(accu.n = 0)] = sp->normal[9 * i + j];
 	      build_golden_chain(sp);
 	    }
