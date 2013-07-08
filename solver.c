@@ -590,49 +590,62 @@ static int check_chain_link(struct f *current, struct f *next)
  * saved.*/
 static int build_intersection(struct s *sp, struct f *first, struct f *last)
 {
-  int r;
+  int r,ret;
+  /* first and last are the same field? */
   if ( f_equal(first, last) )
     {
       log_err("The same field was passed");
-      return -1;
+      return FALSE;
     }
+  /* fields are in the same row and subsquare */
   if ( (first->row_i == last->row_i) &&
        (get_squ_number(first->row_i, first->col_j) == get_squ_number(last->row_i, last->col_j)) )
     {
       desktop.intersection[0] = sp->normal[9 * first->row_i];
       desktop.intersection[9] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j)];
       r = 18;
+      ret = TRUE;
     }
+  /* fields are in the same column and subsquare */
   if ( (first->col_j == last->col_j) &&
        (get_squ_number(first->row_i, first->col_j) == get_squ_number(last->row_i, last->col_j)) )
     {
       desktop.intersection[0] = sp->transposed[9 * first->col_j];
       desktop.intersection[9] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j)];
       r = 18;
+      ret = TRUE;
     }
+  /* fields are in the same row */
   else if (first->row_i == last->row_i)
     {
       desktop.intersection[0] = sp->normal[9 * first->row_i];
       r = 9;
+      ret = TRUE;
     }
+  /* fields are in the same column */
   else if (first->col_j == last->col_j)
     {
       desktop.intersection[0] = sp->transposed[9 * first->col_j];
       r = 9;
+      ret = TRUE;
     }
+  /* fields are in the same box */
   else if ( get_squ_number(first->row_i, first->col_j)
        == get_squ_number(last->row_i, last->col_j) )
     {
       desktop.intersection[0] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j)];
       r = 9;
+      ret = TRUE;
     }
+  /* fields just see two fields */
   else
     {
       desktop.intersection[0] = sp->normal[9 * first->row_i + last->col_j];
       desktop.intersection[1] = sp->normal[9 * last->row_i + first->col_j];
       r = 2;
+      ret = TRUE;
     }
-  return r;
+  return ret;
 }
 
 static void print_accu()
