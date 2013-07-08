@@ -693,6 +693,7 @@ static void print_accu()
     }
   printf("%s", "\n");
 }
+
 /* recursivly build a golden chain and save it in acc */
 static int build_golden_chain(struct s *sp)
 {
