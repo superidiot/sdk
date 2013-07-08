@@ -549,54 +549,6 @@ static int f_visible(struct f *f, struct f *g)
 
 }
 
-/* Check if candidate is a promising start for a golden chain.
- * candidate needs to have a popcount of 2. It has to see another
- * field which has a popcount of 2 and shares exactly one number with
- * the candidate. These checks are done for fields currently loaded
- * on the desktop. */
-static int check_golden_candidate_helper(struct f *candidate)
-{
-  int i;
-  for (i = 0; i < 9; i++)
-    {
-      /* Is another field with exactly two possible numbers loaded? */
-      if ( popcount(desktop.fields[i]->ns) == 2 )
-	{
-	  /* This should not be the candidate itself */
-	  if ( ! (f_equal(desktop.fields[i], candidate)) )
-	    {
-	      /* It should share exactly one number with the candidate */
-	      if ( popcount(desktop.fields[i]->ns | candidate->ns) == 3)
-		{
-		  debug("found a candidate at (%d,%d)!",
-			   desktop.fields[i]->row_i,
-			   desktop.fields[i]->col_j);
-		  return TRUE;
-		}
-	    }
-	}
-    }
-  return FALSE;
-}
-
-/* Check if candidate for starting a golden chain can see something
-   useful */
-static int check_golden_candidate(struct s *sp, struct f *candidate)
-{
-  int row_check, col_check, squ_check;
-  row_check = col_check = squ_check = 0;
-  log_info("check candidate at (%d,%d)",
-	candidate->row_i, candidate->col_j);
-  load_row(sp->normal + 9 * candidate->row_i);
-  row_check = check_golden_candidate_helper(candidate);
-  load_row(sp->transposed + 9 * candidate->col_j);
-  col_check = check_golden_candidate_helper(candidate);
-  load_row(sp->normal + 9 * get_squ_number(candidate->row_i,candidate->col_j));
-  squ_check = check_golden_candidate_helper(candidate);
-  log_info("check = %d", (row_check | col_check | squ_check));
-  return (row_check | col_check | squ_check);
-}
-
 static int f_inAcc(struct f *fp)
 {
   int i;
