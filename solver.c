@@ -671,25 +671,28 @@ static int build_golden_chain(struct s *sp)
 	{
 	  if ( check_chain_link(accu.fields[accu.n], sp->normal[9 * i + j]) )
 	    {
-	      /* add new link to golden chain */
-	      debug("Add link (%d,%d) to golden chain.", i, j);
-	      accu.fields[++accu.n] = sp->normal[9 * i + j];
-	      /* check if start end end of golden chain have
-	       * intersections */
-	      tmp_accun = accu.n;
-	      debug("Check for intersection of { (%d,%d), (%d,%d) }",
-		    accu.fields[0]->row_i, accu.fields[0]->col_j,
-		    accu.fields[accu.n]->row_i, accu.fields[accu.n]->col_j);
-	      if ( build_intersection(sp, accu.fields[0], accu.fields[accu.n]) &&
-		   (accu.fields[0]->ns | accu.fields[accu.n]->ns) == 2 )
+	      if ( accu.n > 0 && ((accu.fields[accu.n - 1]->ns & sp->normal[9 * i + j]->ns & accu.fields[accu.n]->ns) == 0) )
 		{
-		  debug("Valid Intersection: found a golden chain!");
-		}
-	      else
-		{
-		  debug("No intersection: call build_golden_chain recursively");
-		  build_golden_chain(sp);
-		  accu.n = tmp_accun;
+		  /* add new link to golden chain */
+		  debug("Add link (%d,%d) to golden chain.", i, j);
+		  accu.fields[++accu.n] = sp->normal[9 * i + j];
+		  /* check if start end end of golden chain have
+		   * intersections */
+		  tmp_accun = accu.n;
+		  debug("Check for intersection of { (%d,%d), (%d,%d) }",
+			accu.fields[0]->row_i, accu.fields[0]->col_j,
+			accu.fields[accu.n]->row_i, accu.fields[accu.n]->col_j);
+		  if ( build_intersection(sp, accu.fields[0], accu.fields[accu.n]) &&
+		       ( (accu.fields[0]->ns | accu.fields[accu.n]->ns) == 2) )
+		    {
+		      debug("Valid Intersection: found a golden chain!");
+		    }
+		  else
+		    {
+		      debug("No intersection: call build_golden_chain recursively");
+		      build_golden_chain(sp);
+		      accu.n = --tmp_accun;
+		    }
 		}
 	    }
 	}
