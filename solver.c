@@ -662,7 +662,6 @@ static void print_accu()
 /* recursivly build a golden chain and save it in acc */
 static int build_golden_chain(struct s *sp)
 {
-  print_accu;
   int i,j, tmp_accun;
   /* find the next element */
   for (i = 0; i < 9; i++)
@@ -685,6 +684,7 @@ static int build_golden_chain(struct s *sp)
 		  /* check if start end end of golden chain have
 		   * intersections */
 		  tmp_accun = accu.n;
+		  print_accu();
 		  debug("Check for intersection of { (%d,%d), (%d,%d) }",
 			accu.fields[0]->row_i, accu.fields[0]->col_j,
 			accu.fields[accu.n]->row_i, accu.fields[accu.n]->col_j);
