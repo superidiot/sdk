@@ -70,7 +70,7 @@ void printer_cli (struct s *sp)
 	    }
 	  printf("%s"," ");
 	}
-      printf("%s","\n");
+      printf("%s", "\n");
     }
 }
 
