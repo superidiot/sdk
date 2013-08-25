@@ -572,7 +572,7 @@ static int check_chain_link(struct f *current, struct f *next)
     {
       if ( popcount(current->ns | next->ns) == 3 )
 	{
-	  if ( f_visible(current, next) && (! f_equal(current, next)) )
+	  if ( f_visible(current, next) )
 	    {
 	      if ( ! f_inAcc(next) )
 		{
@@ -652,7 +652,7 @@ static void print_accu()
 {
   int i;
   printf("accu contains:");
-  for (i = 0; i < accu.n; i++)
+  for (i = 0; i <= accu.n; i++)
     {
       printf(" (%d,%d)", accu.fields[i]->row_i, accu.fields[i]->col_j);
     }
@@ -671,7 +671,13 @@ static int build_golden_chain(struct s *sp)
 	{
 	  if ( check_chain_link(accu.fields[accu.n], sp->normal[9 * i + j]) )
 	    {
-	      if ( accu.n > 0 && ((accu.fields[accu.n - 1]->ns & sp->normal[9 * i + j]->ns & accu.fields[accu.n]->ns) == 0) )
+	      debug ("check_chain_link was positive from (%d,%d) to (%d,%d)",accu.fields[accu.n]->row_i, accu.fields[accu.n]->col_j, sp->normal[9 * i +j]->row_i, sp->normal[9 * i + j]->col_j);
+	      if (accu.n == 0)
+		{
+		  debug("Add link (%d,%d) to golden chain.", i, j);
+		  accu.fields[++accu.n] = sp->normal[9 * i + j];
+		}
+	      else if ( accu.n > 0 && ((accu.fields[accu.n - 1]->ns & sp->normal[9 * i + j]->ns & accu.fields[accu.n]->ns) == 0) )
 		{
 		  /* add new link to golden chain */
 		  debug("Add link (%d,%d) to golden chain.", i, j);
@@ -683,7 +689,7 @@ static int build_golden_chain(struct s *sp)
 			accu.fields[0]->row_i, accu.fields[0]->col_j,
 			accu.fields[accu.n]->row_i, accu.fields[accu.n]->col_j);
 		  if ( build_intersection(sp, accu.fields[0], accu.fields[accu.n]) &&
-		       ( (accu.fields[0]->ns | accu.fields[accu.n]->ns) == 2) )
+		       ( (accu.fields[0]->ns | accu.fields[accu.n]->ns) == 3) )
 		    {
 		      debug("Valid Intersection: found a golden chain!");
 		    }
