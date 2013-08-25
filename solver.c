@@ -160,17 +160,17 @@ static void init_ns(struct s *sp)
   for (i = 0; i < 9; i++)
     {
       for (j = 0; j < 9; j++)
-        {
-          if (sp->normal[9 * i + j]->n != 0)
-            {
-              rem_n_at(sp, sp->normal[9 * i + j]);
-            }
-        }
+	{
+	  if (sp->normal[9 * i + j]->n != 0)
+	    {
+	      rem_n_at(sp, sp->normal[9 * i + j]);
+	    }
+	}
     }
   if (interactive) printer_cli(sp);
 }
 
-/* Set index (i,j) to number n.  Do all the easy removals in the
+/* Set index (i,j) to number n. Do all the easy removals in the
    corresponding row/col/squ, and set ns to 0 */
 static void set_n_at(struct s *sp, struct f *fp, int n)
 {
@@ -372,7 +372,7 @@ static void set_uniqs(struct s *sp)
    the name is rather bad, I better explain what I want it to do:
    Assume you have the following sudoku:
    +-----------+
-   |7_3|x9x|4_8|  Counting from 0, we look at square 1.  Number 3
+   |7_3|x9x|4_8|  Counting from 0, we look at square 1. Number 3
    |4__|8x7|___|  cannot go where I put x.  So it has to go to the
    |98_|_4_|__7|  bottom, left or right to 4.  This means, that we
    +-----------+  can eliminate 3 from the bottom line in square 2.
