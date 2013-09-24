@@ -1,4 +1,4 @@
-CFLAGS=-Wall -g
+CFLAGS=-Wall -g -DNDEBUG
 objects = main.o printer.o reader.o solver.o
 
 sudoku : $(objects)

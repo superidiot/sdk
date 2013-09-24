@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "sudoku.h"
 
-static void print_bin(int ns)
+void print_bin(int ns)
 {
   int bin = 256;
   int c = 9;

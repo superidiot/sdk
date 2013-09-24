@@ -27,7 +27,7 @@ static struct desk
   /* fields contains pointers to row, column or subsquare */
   struct f **fields;
 
-  /* Contains that can be seen from two distinguished fields at the
+  /* Contains what can be seen from two distinguished fields at the
      same time */
   struct f *intersection[18];
 
@@ -446,7 +446,7 @@ static void find_shadows(struct s *sp, int mode)
 	    {
 	      if (row % 3 == 0){
 		rest = rest | desktop.fields[i + 3]->ns;
-	      }	 else if (row % 3 == 1 )
+	      } else if (row % 3 == 1 )
 		{
 		  if (i < 3) rest = rest | desktop.fields[i]->ns;
 		  if (i >= 3 ) rest = rest | desktop.fields[i + 3]->ns;
@@ -590,62 +590,74 @@ static int check_chain_link(struct f *current, struct f *next)
  * saved.*/
 static int build_intersection(struct s *sp, struct f *first, struct f *last)
 {
-  int r,ret;
-  /* first and last are the same field? */
-  if ( f_equal(first, last) )
-    {
-      log_err("The same field was passed");
-      return FALSE;
-    }
+  int r;
+  debug("Building intersection of (%d,%d) and (%d,%d)", first->row_i, first->col_j, last->row_i, last->col_j);
   /* fields are in the same row and subsquare */
   if ( (first->row_i == last->row_i) &&
        (get_squ_number(first->row_i, first->col_j) == get_squ_number(last->row_i, last->col_j)) )
     {
-      desktop.intersection[0] = sp->normal[9 * first->row_i];
-      desktop.intersection[9] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j)];
-      r = 18;
-      ret = TRUE;
+      debug("Fields are in the same row and subsquare");
+      for (r = 0; r < 18; ++r)
+	{
+	  if (r < 9)
+	    {
+	      desktop.intersection[r] = sp->normal[9 * first->row_i + r];
+	    }
+	  else
+	    {
+	      desktop.intersection[r] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j) + r - 9];
+	    }
+	}
     }
   /* fields are in the same column and subsquare */
-  if ( (first->col_j == last->col_j) &&
+  else if ( (first->col_j == last->col_j) &&
        (get_squ_number(first->row_i, first->col_j) == get_squ_number(last->row_i, last->col_j)) )
     {
-      desktop.intersection[0] = sp->transposed[9 * first->col_j];
-      desktop.intersection[9] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j)];
+      debug("Fields are in the same column and subsquare");
+      for (r = 0; r < 9; ++r )
+	{
+	  desktop.intersection[r] = sp->transposed[9 * first->col_j + r];
+	  desktop.intersection[r + 9] = sp->transformed[r + 9 * get_squ_number(first->row_i, first->col_j)];
+	}
       r = 18;
-      ret = TRUE;
     }
   /* fields are in the same row */
   else if (first->row_i == last->row_i)
     {
-      desktop.intersection[0] = sp->normal[9 * first->row_i];
-      r = 9;
-      ret = TRUE;
+      debug("Fields are only in the same row");
+      for (r = 0; r < 9; ++r)
+	{
+	  desktop.intersection[r] = sp->normal[9 * first->row_i + r];
+	}
     }
   /* fields are in the same column */
   else if (first->col_j == last->col_j)
     {
-      desktop.intersection[0] = sp->transposed[9 * first->col_j];
-      r = 9;
-      ret = TRUE;
+      debug("Fields are only in the same column");
+      for (r = 0; r < 9; ++r)
+	{
+	  desktop.intersection[r] = sp->transposed[9 * first->col_j + r];
+	}
     }
   /* fields are in the same box */
   else if ( get_squ_number(first->row_i, first->col_j)
        == get_squ_number(last->row_i, last->col_j) )
     {
-      desktop.intersection[0] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j)];
-      r = 9;
-      ret = TRUE;
+      debug("Fields are in the same subsquare: %d", get_squ_number(first->row_i, first->col_j));
+      for (r = 0; r < 9; ++r)
+	{
+	  desktop.intersection[r] = sp->transformed[9 * get_squ_number(first->row_i, first->col_j) + r];
+	}
     }
   /* fields just see two fields */
   else
     {
+      debug("Fields just see two common fields");
       desktop.intersection[0] = sp->normal[9 * first->row_i + last->col_j];
       desktop.intersection[1] = sp->normal[9 * last->row_i + first->col_j];
       r = 2;
-      ret = TRUE;
     }
-  return ret;
+  return r;
 }
 
 static void print_accu()
@@ -656,13 +668,13 @@ static void print_accu()
     {
       printf(" (%d,%d)", accu.fields[i]->row_i, accu.fields[i]->col_j);
     }
-  printf("%s", "\n");
+  /* printf("%s", "\n"); */
 }
 
 /* recursivly build a golden chain and save it in acc */
 static int build_golden_chain(struct s *sp)
 {
-  int i,j, tmp_accun;
+  int i, j, k, tmp_accun, count;
   /* find the next element */
   for (i = 0; i < 9; i++)
     {
@@ -670,7 +682,7 @@ static int build_golden_chain(struct s *sp)
 	{
 	  if ( check_chain_link(accu.fields[accu.n], sp->normal[9 * i + j]) )
 	    {
-	      debug ("check_chain_link was positive from (%d,%d) to (%d,%d)",accu.fields[accu.n]->row_i, accu.fields[accu.n]->col_j, sp->normal[9 * i +j]->row_i, sp->normal[9 * i + j]->col_j);
+	      debug("check_chain_link was positive from (%d,%d) to (%d,%d)",accu.fields[accu.n]->row_i, accu.fields[accu.n]->col_j, sp->normal[9 * i +j]->row_i, sp->normal[9 * i + j]->col_j);
 	      if (accu.n == 0)
 		{
 		  debug("Add link (%d,%d) to golden chain.", i, j);
@@ -688,10 +700,50 @@ static int build_golden_chain(struct s *sp)
 		  debug("Check for intersection of { (%d,%d), (%d,%d) }",
 			accu.fields[0]->row_i, accu.fields[0]->col_j,
 			accu.fields[accu.n]->row_i, accu.fields[accu.n]->col_j);
-		  if ( build_intersection(sp, accu.fields[0], accu.fields[accu.n]) &&
-		       ( (accu.fields[0]->ns | accu.fields[accu.n]->ns) == 3) )
+		  if ( ! f_equal( accu.fields[0], accu.fields[accu.n]) &&
+		       popcount(accu.fields[0]->ns | accu.fields[accu.n]->ns) == 3)
 		    {
-		      debug("Valid Intersection: found a golden chain!");
+		      debug("Valid intersection: found a golden chain!");
+		      debug("Intersections at: ");
+		      count = build_intersection(sp, accu.fields[0], accu.fields[accu.n]);
+		      for (k = 0; k < count; k++)
+			{
+			  debug("(%d,%d)", desktop.intersection[k]->row_i, desktop.intersection[k]->col_j);
+			  if ( (desktop.intersection[k]->ns & accu.fields[0]->ns & accu.fields[accu.n]->ns) > 0 )
+			    {
+			      if (! f_equal(desktop.intersection[k], accu.fields[0]) && ! f_equal(desktop.intersection[k], accu.fields[accu.n]))
+				{
+				  if (popcount(desktop.intersection[k]->ns) > 1)
+				    {
+				      if (! f_inAcc(desktop.intersection[k]))
+					{
+					  if (accu.fields[1]->ns & (accu.fields[0]->ns & accu.fields[accu.n]->ns) == 0)
+					    {
+					      debug("GOLDEN ELIMINATION FUCK YEAH");
+					      printer_cli(sp);
+					      print_accu();
+					      printf("%s\n", "desktop.intersection[k]->ns");
+					      print_bin(desktop.intersection[k]->ns);
+					      printf("%s", "\naccu.fields[0]->ns\n");
+					      print_bin(accu.fields[0]->ns);
+					      printf("%s", "\naccu.fields[accu.n]->ns\n");
+					      print_bin(accu.fields[accu.n]->ns);
+					      printf("%s\n", "");
+					      printf("%s", "desktop.intersection[k]->ns was updated to:\n");
+					      print_bin((~(accu.fields[0]->ns & accu.fields[accu.n]->ns)) & desktop.intersection[k]->ns);
+					      printf("%s", "\n");
+					      desktop.intersection[k]->ns &= ~(accu.fields[0]->ns & accu.fields[accu.n]->ns);
+					      print_bin(desktop.intersection[k]->ns);
+					      printf("%s\n", "");
+					      changed = TRUE;
+					      printer_cli(sp);
+					      getchar();
+					    }
+					}
+				    }
+				}
+			    }
+			}
 		    }
 		  else
 		    {
@@ -705,7 +757,7 @@ static int build_golden_chain(struct s *sp)
     }
   /* if not add new element to accumulator, call this function again */
   /* if no new element was found abort */
-  return FALSE;
+return FALSE;
 }
 
 static void start_golden_chain(struct s *sp)
@@ -766,8 +818,12 @@ int solver(struct s *sp, int inter)
 	{
 	  find_shadows(sp, i); /* find shadows in normal sudoku */
 	}
+      printer_cli(sp);
+      getchar();
+      start_golden_chain(sp);
+      printer_cli(sp);
+      getchar();
     }
   while (changed);
-  start_golden_chain(sp);
   return test(sp);
 }
